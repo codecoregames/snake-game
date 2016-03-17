@@ -14,22 +14,22 @@ package
 		/**
 		 * Размер клетки.
 		 */
-		private const CELL_SIZE:uint = 100;
+		private const CELL_SIZE:uint = 50;
 		
 		/**
-		 * Голова змеи(экземпляр класса).
+		 * Половина размера клетки.
 		 */
-		private var snakeHead:SkyClip;
+		private const HALF_CELL_SIZE:uint = CELL_SIZE / 2;
+		
+		/**
+		 * Число обновлений за 1 секунду логики в игре.
+		 */
+		private const NUM_OF_UPDATE:uint = 6;
 		
 		/**
 		 * Класс для работы с клавиатурой.
 		 */
 		private var keyboard:SkyKeyboard;
-		
-		/**
-		 * Скорость змейки = количеству клеток за кадр.
-		 */
-		private const SPEED:uint = 1;
 		
 		/**
 		 * Скорость по x;
@@ -42,25 +42,40 @@ package
 		private var speedY:int;
 		
 		/**
-		 * Счётчик для задержки расчёта смещения змейки. 
+		 * Счётчик для задержки обновления некоторой логики в игре. 
 		 */
-		private var delayCount:int;
+		private var delayCounter:int;
 		
+		/**
+		 * Клип для отображения яблока.
+		 */
 		private var apple:SkyClip;
 		
+		/**
+		 * Клип для отображения головы змейки.
+		 */
+		private var snakeHead:SkyClip;
+		
+		/**
+		 * Массив с клипами(частями змейки).
+		 */
 		private var body:Vector.<SkyClip>;
 		
 		private var prev1:Point;
+		
 		private var prev2:Point;
-		private var isHit:Boolean = false;
+		
+		private var isGameOver:Boolean;
 		
 		/**
 		 * Конструктор класса(вызывается при создании класса).
 		 */
 		public function Snake() 
 		{
+			//Вызываем в конструкторе функцию prepareGraphics для использования графики, которую мы рисовали, в игре.
 			prepareGraphics();
 			
+			//Вызываем функцию инициализации init нашей игры.
 			init();
 		}
 		
@@ -69,17 +84,13 @@ package
 		 */
 		private function init():void
 		{
-			speedX = 0;
-			speedY = 0;
-			delayCount = 0;
-			
 			keyboard = SkyKeyboard.instance;
 			
-			apple = new SkyClip();
-			apple.setAnimation("apple");
-			apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-			apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-			addChild(apple);
+			apple = new SkyClip(); //Создаём клип для отображения яблока.
+			apple.setAnimation("apple"); //Даём ему картину, которую он будет отображать.
+			apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2; //
+			apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2; //
+			addChild(apple); //добавляем на сцену.
 			
 			snakeHead = new SkyClip();
 			snakeHead.setAnimation("head");
@@ -87,34 +98,62 @@ package
 			snakeHead.y = CELL_SIZE * 0.5 + CELL_SIZE * 10;
 			addChild(snakeHead);
 			
+			var grid:SkyClip = new SkyClip();
+			grid.setAnimation("grid");
+			addChild(grid);
+			
 			body = new Vector.<SkyClip>();
 			
 			prev1 = new Point();
 			prev2 = new Point();
+			
+			delayCounter = 0;
+			speedX = 0;
+			speedY = 0;
+			isGameOver = false;
 		}
 		
 		/**
-		 * Подготовить графику.
+		 * Подготовить графику для использования в игре.
 		 */
 		private function prepareGraphics():void
 		{
-			var head:Sprite = new Sprite();
-			head.graphics.beginFill(0xC82286);
-			head.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
+			var head:Sprite = new Sprite();	//cоздаём спрайт с именем head.
+			head.graphics.beginFill(0xC82286); //c помощью методов graphics задаём цвет, вызывая функцию beginFill.
+			head.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE); //с помощью функции drawRect рисуем квадрат со сторонами CELL_SIZE.
 			
-			SkyAnimationCache.instance.addAnimationFromSprite(head, "head");
+			//head.graphics.drawRect(0, 0, CELL_SIZE, CELL_SIZE); если написать так, то центр по умолчанию будет в левом верхнем углу.
+			//первым двум координатам мы указываем то, где будет центр у фигуры.
+			//(0, 0) - левый верхний
+			//(-CELL_SIZE, -CELL_SIZE) - правый нижний.
+			//(-CELL_SIZE / 2, -CELL_SIZE / 2) - центр.
 			
 			var body:Sprite = new Sprite();
 			body.graphics.beginFill(0xE0549A);
 			body.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
 			
-			SkyAnimationCache.instance.addAnimationFromSprite(body, "body");
-			
 			var apple:Sprite = new Sprite();
 			apple.graphics.beginFill(0x18D187);
 			apple.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
 			
+			var debugGrid:Sprite = new Sprite();
+			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5); //задаём отрисовку квадратов линиями(толщина, цвет линии, прозрачность).
+			
+			var nCells:int = int(800 / CELL_SIZE); //получаем количество клеток на экране.
+			
+			for (var i:int = 0; i < nCells; i++) 
+			{
+				for (var j:int = 0; j < nCells; j++) 
+				{
+					debugGrid.graphics.drawRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+				}
+			}
+			
+			//Добавляем полученные фигуры в хранилище SkyAnimationCache. 1 параметр - что нужно сохранить, 2 параметр - имя сохраняемой картинки\анимации.
+			SkyAnimationCache.instance.addAnimationFromSprite(head, "head");
+			SkyAnimationCache.instance.addAnimationFromSprite(body, "body");
 			SkyAnimationCache.instance.addAnimationFromSprite(apple, "apple");
+			SkyAnimationCache.instance.addAnimationFromSprite(debugGrid, "grid");
 		}
 		
 		/**
@@ -159,45 +198,45 @@ package
 		{
 			if (keyboard.anyKeyDown)
 			{
-				isHit = false;
+				isGameOver = false;
 			}
 			
 			if (keyboard.isPressed(SkyKey.LEFT))
 			{
-				if (speedX == 0) speedX = -SPEED * CELL_SIZE;
+				if (speedX == 0) speedX = -CELL_SIZE;
 				speedY = 0;
 			}
 			
 			if (keyboard.isPressed(SkyKey.RIGHT))
 			{
-				if (speedX == 0) speedX = SPEED * CELL_SIZE;
+				if (speedX == 0) speedX = CELL_SIZE;
 				speedY = 0;
 			}
 			
 			if (keyboard.isPressed(SkyKey.UP))
 			{
-				if (speedY == 0) speedY = -SPEED * CELL_SIZE;
+				if (speedY == 0) speedY = -CELL_SIZE;
 				speedX = 0;
 			}
 			
 			if (keyboard.isPressed(SkyKey.DOWN))
 			{
-				if (speedY == 0) speedY = SPEED * CELL_SIZE;
+				if (speedY == 0) speedY = CELL_SIZE;
 				speedX = 0;
 			}
 			
-			delayCount++;
+			delayCounter++;
 			
-			if (delayCount >= 10)
+			if (delayCounter >= 60 / NUM_OF_UPDATE)
 			{
 				prev2.setTo(snakeHead.x, snakeHead.y);
 				
 				snakeHead.x += speedX;
 				snakeHead.y += speedY;
 				
-				if(!isHit) updateBody();
+				if (!isGameOver) updateBody();
 				
-				delayCount = 0;
+				delayCounter = 0;
 			}
 			
 			if (apple.hitTestObject(snakeHead))
@@ -219,7 +258,7 @@ package
 				{
 					speedX = 0;
 					speedY = 0;
-					isHit = true;
+					isGameOver = true;
 				}
 			}
 			
