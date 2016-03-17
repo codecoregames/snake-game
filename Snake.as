@@ -135,9 +135,9 @@ package
 			apple.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
 			
 			var debugGrid:Sprite = new Sprite();
-			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5); //задаём отрисовку квадратов линиями(толщина, цвет линии, прозрачность).
+			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5);
 			
-			var nCells:int = int(800 / CELL_SIZE); //получаем количество клеток на экране.
+			var nCells:int = int(800 / CELL_SIZE);
 			
 			for (var i:int = 0; i < nCells; i++) 
 			{
