@@ -26,7 +26,7 @@ package
 		
 		private var nCells:int;
 		
-		public function Grid() 
+		public function Grid()
 		{
 			
 		}
@@ -45,6 +45,11 @@ package
 			nCells = 0;
 		}
 		
+		/**
+		 * Задать значение клетке.
+		 * @param	index номер клетки.
+		 * @param	value значение.
+		 */
 		public function setCell(index:int, value:uint):void
 		{
 			if (value > 3 || value < 0) return;

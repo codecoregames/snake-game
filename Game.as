@@ -14,7 +14,7 @@ package
 	{
 		public function Game()
 		{
-			
+			var grid:Grid
 		}
 		
 		public function update(deltaTime:Number):void
