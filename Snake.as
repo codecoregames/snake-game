@@ -72,10 +72,8 @@ package
 		 */
 		public function Snake() 
 		{
-			//Вызываем в конструкторе функцию prepareGraphics для использования графики, которую мы рисовали, в игре.
 			prepareGraphics();
 			
-			//Вызываем функцию инициализации init нашей игры.
 			init();
 		}
 		
@@ -86,11 +84,11 @@ package
 		{
 			keyboard = SkyKeyboard.instance;
 			
-			apple = new SkyClip(); //Создаём клип для отображения яблока.
-			apple.setAnimation("apple"); //Даём ему картину, которую он будет отображать.
-			apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2; //
-			apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2; //
-			addChild(apple); //добавляем на сцену.
+			apple = new SkyClip();
+			apple.setAnimation("apple");
+			apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
+			apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
+			addChild(apple);
 			
 			snakeHead = new SkyClip();
 			snakeHead.setAnimation("head");
