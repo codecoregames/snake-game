@@ -7,6 +7,7 @@ package
 	{
 		public function Main() 
 		{
+			//fsasfsafd
 			var skysand:SkySand = new SkySand(); //Экзэмпляр класса SkySand
 			skysand.initialize(stage, 60, 800, 800); //Инициализация(ссылка на сцену, частота кадров, разрешение окна)
 			skysand.mainClass = new Snake(); //Ссылка на класс
