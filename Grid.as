@@ -5,23 +5,7 @@ package
 	
 	public class Grid
 	{
-		/**
-		 * Ячейка пуста.
-		 */
-		public static const CELL_FREE:uint = 0;
 		
-		/**
-		 * В ячейке яблоко.
-		 */
-		public static const CELL_APPLE:uint = 1;
-		
-		/**
-		 * В ячейке змейка.
-		 */
-		public static const CELL_SNAKE:uint = 2;
-		
-		public static const CELL_SIZE:uint = 20;
-		public static const HALF_CELL_SIZE:uint = CELL_SIZE / 2;
 		
 		/**
 		 * Массив с картой.

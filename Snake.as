@@ -116,15 +116,9 @@ package
 		 */
 		private function prepareGraphics():void
 		{
-			var head:Sprite = new Sprite();	//cоздаём спрайт с именем head.
-			head.graphics.beginFill(0xC82286); //c помощью методов graphics задаём цвет, вызывая функцию beginFill.
-			head.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE); //с помощью функции drawRect рисуем квадрат со сторонами CELL_SIZE.
-			
-			//head.graphics.drawRect(0, 0, CELL_SIZE, CELL_SIZE); если написать так, то центр по умолчанию будет в левом верхнем углу.
-			//первым двум координатам мы указываем то, где будет центр у фигуры.
-			//(0, 0) - левый верхний
-			//(-CELL_SIZE, -CELL_SIZE) - правый нижний.
-			//(-CELL_SIZE / 2, -CELL_SIZE / 2) - центр.
+			var head:Sprite = new Sprite();
+			head.graphics.beginFill(0xC82286);
+			head.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
 			
 			var body:Sprite = new Sprite();
 			body.graphics.beginFill(0xE0549A);
@@ -147,7 +141,6 @@ package
 				}
 			}
 			
-			//Добавляем полученные фигуры в хранилище SkyAnimationCache. 1 параметр - что нужно сохранить, 2 параметр - имя сохраняемой картинки\анимации.
 			SkyAnimationCache.instance.addAnimationFromSprite(head, "head");
 			SkyAnimationCache.instance.addAnimationFromSprite(body, "body");
 			SkyAnimationCache.instance.addAnimationFromSprite(apple, "apple");
