@@ -14,7 +14,7 @@ package
 		/**
 		 * Размер клетки.
 		 */
-		private const CELL_SIZE:uint = 100;
+		private const CELL_SIZE:uint = 50;
 		
 		/**
 		 * Голова змеи(экземпляр класса).
@@ -77,8 +77,8 @@ package
 			
 			apple = new SkyClip();
 			apple.setAnimation("apple");
-			apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-			apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
+			apple.x = int((Math.random() * 800 - CELL_SIZE) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
+			apple.y = int((Math.random() * 800 - CELL_SIZE) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
 			addChild(apple);
 			
 			snakeHead = new SkyClip();
