@@ -61,10 +61,19 @@ package
 		 */
 		private var body:Vector.<SkyClip>;
 		
+		/**
+		 * 1 точка для расчёта позиции предыдущей части змейки.
+		 */
 		private var prev1:Point;
 		
+		/**
+		 * 2 точка для расчёта позиции предыдущей части змейки.
+		 */
 		private var prev2:Point;
 		
+		/**
+		 * Проверка на проигрыш.
+		 */
 		private var isGameOver:Boolean;
 		
 		/**
@@ -94,8 +103,8 @@ package
 			
 			snakeHead = new SkyClip();
 			snakeHead.setAnimation("head");
-			snakeHead.x = CELL_SIZE * 0.5 + CELL_SIZE * 10;
-			snakeHead.y = CELL_SIZE * 0.5 + CELL_SIZE * 10;
+			snakeHead.x = HALF_CELL_SIZE + CELL_SIZE * 10;
+			snakeHead.y = HALF_CELL_SIZE + CELL_SIZE * 10;
 			addChild(snakeHead);
 			
 			var grid:SkyClip = new SkyClip();
@@ -120,7 +129,7 @@ package
 		{
 			var head:Sprite = new Sprite();	//cоздаём спрайт с именем head.
 			head.graphics.beginFill(0xC82286); //c помощью методов graphics задаём цвет, вызывая функцию beginFill.
-			head.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE); //с помощью функции drawRect рисуем квадрат со сторонами CELL_SIZE.
+			head.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE); //с помощью функции drawRect рисуем квадрат со сторонами CELL_SIZE.
 			
 			//head.graphics.drawRect(0, 0, CELL_SIZE, CELL_SIZE); если написать так, то центр по умолчанию будет в левом верхнем углу.
 			//первым двум координатам мы указываем то, где будет центр у фигуры.
@@ -130,11 +139,11 @@ package
 			
 			var body:Sprite = new Sprite();
 			body.graphics.beginFill(0xE0549A);
-			body.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
+			body.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE);
 			
 			var apple:Sprite = new Sprite();
 			apple.graphics.beginFill(0x18D187);
-			apple.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
+			apple.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE);
 			
 			var debugGrid:Sprite = new Sprite();
 			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5); //задаём отрисовку квадратов линиями(толщина, цвет линии, прозрачность).
@@ -157,16 +166,16 @@ package
 		}
 		
 		/**
-		 * Фунцкия для обновления тела змейки.
+		 * Фунцкия для обновления тела змейки(расчитывает положение каждой части тела змейки).
 		 */
 		private function updateBody():void
 		{
-			var length:int = body.length;
+			var length:int = body.length; //записываем длину массива или количество блоков змейки.
 			
-			if (length == 0) return;
+			if (length == 0) return; //если длина 0 то ничего не делаем.
 			
-			prev1.x = body[0].x;
-			prev1.y = body[0].y;
+			prev1.x = body[0].x; //присваиваем 1 точке значение координаты х первого элемента хвоста.
+			prev1.y = body[0].y; //присваиваем 1 точке значение координаты у первого элемента хвоста.
 			
 			body[0].x = prev2.x;
 			body[0].y = prev2.y;
