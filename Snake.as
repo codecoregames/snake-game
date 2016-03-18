@@ -72,8 +72,6 @@ package
 		 */
 		public function Snake() 
 		{
-			prepareGraphics();
-			
 			init();
 		}
 		
@@ -82,14 +80,6 @@ package
 		 */
 		private function init():void
 		{
-			keyboard = SkyKeyboard.instance;
-			
-			apple = new SkyClip();
-			apple.setAnimation("apple");
-			apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-			apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-			addChild(apple);
-			
 			snakeHead = new SkyClip();
 			snakeHead.setAnimation("head");
 			snakeHead.x = CELL_SIZE * 0.5 + CELL_SIZE * 10;
@@ -109,42 +99,8 @@ package
 			speedX = 0;
 			speedY = 0;
 			isGameOver = false;
-		}
-		
-		/**
-		 * Подготовить графику для использования в игре.
-		 */
-		private function prepareGraphics():void
-		{
-			var head:Sprite = new Sprite();
-			head.graphics.beginFill(0xC82286);
-			head.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
 			
-			var body:Sprite = new Sprite();
-			body.graphics.beginFill(0xE0549A);
-			body.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
-			
-			var apple:Sprite = new Sprite();
-			apple.graphics.beginFill(0x18D187);
-			apple.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
-			
-			var debugGrid:Sprite = new Sprite();
-			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5);
-			
-			var nCells:int = int(800 / CELL_SIZE);
-			
-			for (var i:int = 0; i < nCells; i++) 
-			{
-				for (var j:int = 0; j < nCells; j++) 
-				{
-					debugGrid.graphics.drawRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-				}
-			}
-			
-			SkyAnimationCache.instance.addAnimationFromSprite(head, "head");
-			SkyAnimationCache.instance.addAnimationFromSprite(body, "body");
-			SkyAnimationCache.instance.addAnimationFromSprite(apple, "apple");
-			SkyAnimationCache.instance.addAnimationFromSprite(debugGrid, "grid");
+			keyboard = SkyKeyboard.instance;
 		}
 		
 		/**
