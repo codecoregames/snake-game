@@ -50,13 +50,21 @@ package
 		//Kekus
 		private function initialize():void
 		{
-			var grid:SkyClip = new SkyClip();
+			/*var grid:SkyClip = new SkyClip();
 			grid.setAnimation("grid");
-			addChild(grid);
+			addChild(grid);*/
 			
 			Console.instance.registerCommand("add", add, []);
 			add(10, 10, Config.CELL_APPLE);
 			add(11, 1, Config.CELL_SNAKE);
+			
+			var grid:Grid = new Grid();
+			grid.initialize(800, 800, Config.CELL_SIZE);
+			grid.setCell(3, 3, Config.CELL_APPLE);
+			grid.setCell(8, 8, Config.CELL_APPLE);
+			grid.setCell(1, 1, Config.CELL_SNAKE);
+			
+			trace(grid.toString());
 		}
 		
 		public function update(deltaTime:Number):void

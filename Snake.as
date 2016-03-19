@@ -80,11 +80,20 @@ package
 		 */
 		private function init():void
 		{
+			createRect(0xCE13D2, "head");
+			createRect(0x00FF00, "apple");
+			
 			snakeHead = new SkyClip();
 			snakeHead.setAnimation("head");
 			snakeHead.x = CELL_SIZE * 0.5 + CELL_SIZE * 10;
 			snakeHead.y = CELL_SIZE * 0.5 + CELL_SIZE * 10;
 			addChild(snakeHead);
+			
+			apple = new SkyClip();
+			apple.setAnimation("apple");
+			apple.x = Config.HALF_CELL_SIZE;
+			apple.y = Config.HALF_CELL_SIZE;
+			addChild(apple);
 			
 			var grid:SkyClip = new SkyClip();
 			grid.setAnimation("grid");
@@ -101,6 +110,15 @@ package
 			isGameOver = false;
 			
 			keyboard = SkyKeyboard.instance;
+		}
+		
+		private function createRect(color:uint, name:String):void
+		{
+			var sprite:Sprite = new Sprite();
+			sprite.graphics.beginFill(color);
+			sprite.graphics.drawRect( -Config.HALF_CELL_SIZE, -Config.HALF_CELL_SIZE, Config.CELL_SIZE, Config.CELL_SIZE);
+			
+			SkyAnimationCache.instance.addAnimationFromSprite(sprite, name);
 		}
 		
 		/**
@@ -135,6 +153,11 @@ package
 					body[i].y = prev2.y;
 				}
 			}
+		}
+		
+		public function setPosition(x:int, y:int):void
+		{
+			
 		}
 		
 		/**
@@ -188,11 +211,11 @@ package
 			
 			if (apple.hitTestObject(snakeHead))
 			{
-				apple.x = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
+				apple.x = int((Math.random() * 800) / Config.CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
 				apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
 				
 				var bodyPart:SkyClip = new SkyClip();
-				bodyPart.setAnimation("body");
+				bodyPart.setAnimation("head");
 				bodyPart.x = body.length - 1 > 0 ? body[body.length - 1].x : prev2.x;
 				bodyPart.y = body.length - 1 > 0 ? body[body.length - 1].y : prev2.y;
 				addChild(bodyPart);
@@ -217,24 +240,24 @@ package
 		 */
 		private function warp():void
 		{
-			if (snakeHead.x > 800 - CELL_SIZE / 2)
+			if (snakeHead.x > 800 - Config.HALF_CELL_SIZE)
 			{
-				snakeHead.x = CELL_SIZE / 2;
+				snakeHead.x = Config.HALF_CELL_SIZE;
 			}
 			
-			if (snakeHead.x < -CELL_SIZE / 2)
+			if (snakeHead.x < -Config.HALF_CELL_SIZE)
 			{
-				snakeHead.x = 800 - CELL_SIZE / 2;
+				snakeHead.x = 800 - Config.HALF_CELL_SIZE;
 			}
 			
-			if (snakeHead.y > 800 - CELL_SIZE / 2)
+			if (snakeHead.y > 800 - Config.HALF_CELL_SIZE)
 			{
-				snakeHead.y = CELL_SIZE / 2;
+				snakeHead.y = Config.HALF_CELL_SIZE;
 			}
 			
-			if (snakeHead.y < -CELL_SIZE / 2)
+			if (snakeHead.y < -Config.HALF_CELL_SIZE)
 			{
-				snakeHead.y = 800 - CELL_SIZE / 2;
+				snakeHead.y = 800 - Config.HALF_CELL_SIZE;
 			}
 		}
 	}

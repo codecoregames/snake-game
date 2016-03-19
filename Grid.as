@@ -35,7 +35,7 @@ package
 			
 			for (var i:int = 0; i < nCells; i++) 
 			{
-				cells[i] = Grid.CELL_FREE;
+				cells[i] = Config.CELL_FREE;
 			}
 			
 			sprite = new SkyClip();
@@ -49,8 +49,8 @@ package
 		
 		public function add(x:int, y:int, clip:SkyClip, type:uint):void
 		{
-			clip.x = CELL_SIZE * x - HALF_CELL_SIZE;
-			clip.y = CELL_SIZE * y - HALF_CELL_SIZE;
+			clip.x = Config.CELL_SIZE * x - Config.HALF_CELL_SIZE;
+			clip.y = Config.CELL_SIZE * y - Config.HALF_CELL_SIZE;
 			
 			sprite.addChildAt(clip, 0);
 			setCell(x, y, type);
@@ -65,7 +65,7 @@ package
 		{
 			if (value > 3 || value < 0) return;
 			
-			cells[y * gridWidth - x] = value;// x = 4 y = 8
+			cells[(y - 1) * gridWidth + (x - 1)] = value;
 		}
 		
 		/**
