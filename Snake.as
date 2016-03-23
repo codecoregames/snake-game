@@ -9,28 +9,8 @@ package
 	import skysand.keyboard.SkyKeyboard;
 	import skysand.render.RenderObject;
 	
-	public class Snake extends RenderObject implements IUpdatable
+	public class Snake extends RenderObject
 	{
-		/**
-		 * Размер клетки.
-		 */
-		private const CELL_SIZE:uint = 50;
-		
-		/**
-		 * Половина размера клетки.
-		 */
-		private const HALF_CELL_SIZE:uint = CELL_SIZE / 2;
-		
-		/**
-		 * Число обновлений за 1 секунду логики в игре.
-		 */
-		private const NUM_OF_UPDATE:uint = 6;
-		
-		/**
-		 * Класс для работы с клавиатурой.
-		 */
-		private var keyboard:SkyKeyboard;
-		
 		/**
 		 * Скорость по x;
 		 */
@@ -42,83 +22,84 @@ package
 		private var speedY:int;
 		
 		/**
-		 * Счётчик для задержки обновления некоторой логики в игре. 
-		 */
-		private var delayCounter:int;
-		
-		/**
-		 * Клип для отображения яблока.
-		 */
-		private var apple:SkyClip;
-		
-		/**
 		 * Клип для отображения головы змейки.
 		 */
-		private var snakeHead:SkyClip;
+		private var head:SnakePart;
 		
 		/**
 		 * Массив с клипами(частями змейки).
 		 */
-		private var body:Vector.<SkyClip>;
+		private var body:Vector.<SnakePart>;
 		
 		private var prev1:Point;
 		
 		private var prev2:Point;
 		
-		private var isGameOver:Boolean;
+		private var grid:Grid;
 		
-		/**
-		 * Конструктор класса(вызывается при создании класса).
-		 */
+		private var position:Point;
+		
 		public function Snake() 
 		{
-			init();
+			
 		}
 		
 		/**
 		 * Функция инициализации игры.
 		 */
-		private function init():void
+		public function init(x:int, y:int, grid:Grid):void
 		{
-			createRect(0xCE13D2, "head");
-			createRect(0x00FF00, "apple");
+			this.grid = grid;
 			
-			snakeHead = new SkyClip();
-			snakeHead.setAnimation("head");
-			snakeHead.x = CELL_SIZE * 0.5 + CELL_SIZE * 10;
-			snakeHead.y = CELL_SIZE * 0.5 + CELL_SIZE * 10;
-			addChild(snakeHead);
+			body = new Vector.<SnakePart>();
 			
-			apple = new SkyClip();
-			apple.setAnimation("apple");
-			apple.x = Config.HALF_CELL_SIZE;
-			apple.y = Config.HALF_CELL_SIZE;
-			addChild(apple);
-			
-			var grid:SkyClip = new SkyClip();
-			grid.setAnimation("grid");
-			addChild(grid);
-			
-			body = new Vector.<SkyClip>();
+			head = new SnakePart();
+			head.init(grid);
+			head.setPos(x, y);
+			addChild(head);
 			
 			prev1 = new Point();
 			prev2 = new Point();
 			
-			delayCounter = 0;
 			speedX = 0;
 			speedY = 0;
-			isGameOver = false;
 			
-			keyboard = SkyKeyboard.instance;
+			position = new Point(x, y);
 		}
 		
-		private function createRect(color:uint, name:String):void
+		public function moveLeft():void
 		{
-			var sprite:Sprite = new Sprite();
-			sprite.graphics.beginFill(color);
-			sprite.graphics.drawRect( -Config.HALF_CELL_SIZE, -Config.HALF_CELL_SIZE, Config.CELL_SIZE, Config.CELL_SIZE);
+			speedX = -1;
+			speedY = 0;
+		}
+		
+		public function moveRight():void
+		{
+			speedX = 1;
+			speedY = 0;
+		}
+		
+		public function moveUp():void
+		{
+			speedY = -1;
+			speedX = 0;
+		}
+		
+		public function moveDown():void
+		{
+			speedY = 1;
+			speedX = 0;
+		}
+		
+		public function grownUp():void
+		{
+			var pos:Point = body.length < 1 ? head.getPos() : body[body.length - 1].getPos();
 			
-			SkyAnimationCache.instance.addAnimationFromSprite(sprite, name);
+			var bodyPart:SnakePart = new SnakePart();
+			bodyPart.init(grid);
+			bodyPart.setPos(pos.x, pos.y + 1);
+			addChild(bodyPart);
+			body.push(bodyPart);
 		}
 		
 		/**
@@ -126,7 +107,7 @@ package
 		 */
 		private function updateBody():void
 		{
-			var length:int = body.length;
+			/*var length:int = body.length;
 			
 			if (length == 0) return;
 			
@@ -152,12 +133,12 @@ package
 					body[i].x = prev2.x;
 					body[i].y = prev2.y;
 				}
-			}
+			}*/
 		}
 		
-		public function setPosition(x:int, y:int):void
+		public function get pos():Point
 		{
-			
+			return position;
 		}
 		
 		/**
@@ -166,7 +147,17 @@ package
 		 */
 		public function update(deltaTime:Number):void
 		{
-			if (keyboard.anyKeyDown)
+			if (speedX != 0 || speedY != 0)
+			{
+				position.x += speedX;
+				position.y += speedY;
+				
+				warp();
+				
+				head.setPos(position.x, position.y);
+			}
+			
+			/*if (keyboard.anyKeyDown)
 			{
 				isGameOver = false;
 			}
@@ -232,7 +223,7 @@ package
 				warp();
 				
 				delayCounter = 0;
-			}
+			}*/
 		}
 		
 		/**
@@ -240,24 +231,24 @@ package
 		 */
 		private function warp():void
 		{
-			if (snakeHead.x > 800 - Config.HALF_CELL_SIZE)
+			if (position.x > 8)
 			{
-				snakeHead.x = Config.HALF_CELL_SIZE;
+				position.x = 1;
 			}
 			
-			if (snakeHead.x < -Config.HALF_CELL_SIZE)
+			if (position.x < 1)
 			{
-				snakeHead.x = 800 - Config.HALF_CELL_SIZE;
+				position.x = 8;
 			}
 			
-			if (snakeHead.y > 800 - Config.HALF_CELL_SIZE)
+			if (position.y > 8)
 			{
-				snakeHead.y = Config.HALF_CELL_SIZE;
+				position.y = 1;
 			}
 			
-			if (snakeHead.y < -Config.HALF_CELL_SIZE)
+			if (position.y < 1)
 			{
-				snakeHead.y = 800 - Config.HALF_CELL_SIZE;
+				position.y = 8;
 			}
 		}
 	}

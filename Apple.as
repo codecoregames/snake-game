@@ -6,10 +6,7 @@ package
 	{
 		public function Apple() 
 		{
-			sprite = null;
-			grid = null;
-			prev = null;
-			type = 0;
+			super();
 		}
 		
 		public function setRandomPos():void
@@ -36,7 +33,7 @@ package
 			sprite.setAnimation("apple");
 			addChild(sprite);
 			
-			type = APPLE;
+			type = Grid.CELL_APPLE;
 		}
 		
 		override public function update(deltaTime:Number):void 
