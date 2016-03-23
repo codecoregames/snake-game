@@ -93,11 +93,11 @@ package
 		
 		public function grownUp():void
 		{
-			var pos:Point = body.length < 1 ? head.getPos() : body[body.length - 1].getPos();
+			var p:Point = body.length < 1 ? head.getPos() : body[body.length - 1].getPos();
 			
 			var bodyPart:SnakePart = new SnakePart();
 			bodyPart.init(grid);
-			bodyPart.setPos(pos.x, pos.y + 1);
+			bodyPart.setPos(p.x, p.y);
 			addChild(bodyPart);
 			body.push(bodyPart);
 		}
@@ -107,7 +107,7 @@ package
 		 */
 		private function updateBody():void
 		{
-			/*var length:int = body.length;
+			var length:int = body.length;
 			
 			if (length == 0) return;
 			
@@ -133,7 +133,7 @@ package
 					body[i].x = prev2.x;
 					body[i].y = prev2.y;
 				}
-			}*/
+			}
 		}
 		
 		public function get pos():Point
@@ -151,10 +151,14 @@ package
 			{
 				position.x += speedX;
 				position.y += speedY;
+				prev2.x = head.x;
+				prev2.y = head.y;
 				
 				warp();
 				
 				head.setPos(position.x, position.y);
+				
+				updateBody();
 			}
 			
 			/*if (keyboard.anyKeyDown)
@@ -231,24 +235,24 @@ package
 		 */
 		private function warp():void
 		{
-			if (position.x > 8)
+			if (position.x > grid.gwidth)
 			{
 				position.x = 1;
 			}
 			
 			if (position.x < 1)
 			{
-				position.x = 8;
+				position.x = grid.gwidth;
 			}
 			
-			if (position.y > 8)
+			if (position.y > grid.gwidth)
 			{
 				position.y = 1;
 			}
 			
 			if (position.y < 1)
 			{
-				position.y = 8;
+				position.y = grid.gwidth;
 			}
 		}
 	}

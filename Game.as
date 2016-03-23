@@ -85,7 +85,9 @@ package
 				{
 					apple.setRandomPos();
 					snake.grownUp();
+					
 				}
+				//trace(grid.toString());
 			}
 		}
 		

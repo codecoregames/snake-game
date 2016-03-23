@@ -35,10 +35,10 @@ package
 			if (x == 0) x = 1;
 			if (y == 0) y = 1;
 			
-			if (grid.getCell(x, y) != Grid.CELL_FREE) return false;
+			if (grid.getCell(x, y) != Grid.CELL_FREE && type != Grid.CELL_SNAKE) return false;
 			
 			grid.setCell(prev.x, prev.y, Grid.CELL_FREE);
-			grid.setCell(x, y, Grid.CELL_APPLE);
+			grid.setCell(x, y, type);
 			
 			prev.x = x;
 			prev.y = y;

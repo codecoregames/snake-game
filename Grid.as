@@ -67,9 +67,11 @@ package
 		 */
 		public function setCell(x:int, y:int, value:uint):void
 		{
-			if (value > 3 || value < 0) return;
+			var index:int = (y - 1) * gridWidth + (x - 1);
 			
-			cells[(y - 1) * gridWidth + (x - 1)] = value;
+			if (value > 3 || value < 0 || index > nCells - 1) return;
+			
+			cells[index] = value;
 		}
 		
 		/**
@@ -79,7 +81,11 @@ package
 		 */
 		public function getCell(x:int, y:int):uint
 		{
-			return cells[(y - 1) * gridWidth + (x - 1)];
+			var index:int = (y - 1) * gridWidth + (x - 1);
+			
+			if (index > nCells - 1) return 4;
+			
+			return cells[index];
 		}
 		
 		public function get gwidth():int
