@@ -12,6 +12,11 @@ package
 	
 	public class Game extends RenderObject
 	{
+		public static const CELL_SIZE:uint = 20;
+		public static const HALF_CELL_SIZE:uint = CELL_SIZE / 2;
+		
+		private var grid:Grid;
+		
 		public function Game()
 		{
 			initialize();
@@ -47,7 +52,6 @@ package
 			}
 		}
 		
-		//Kekus
 		private function initialize():void
 		{
 			/*var grid:SkyClip = new SkyClip();
@@ -55,21 +59,23 @@ package
 			addChild(grid);*/
 			
 			Console.instance.registerCommand("add", add, []);
-			add(10, 10, Config.CELL_APPLE);
-			add(11, 1, Config.CELL_SNAKE);
 			
-			var grid:Grid = new Grid();
+			grid = new Grid();
 			grid.initialize(800, 800, Config.CELL_SIZE);
-			grid.setCell(3, 3, Config.CELL_APPLE);
-			grid.setCell(8, 8, Config.CELL_APPLE);
-			grid.setCell(1, 1, Config.CELL_SNAKE);
+			addChild(grid);
 			
-			trace(grid.toString());
+			var apple:Apple = new Apple();
+			apple.init(grid);
+			apple.setPos(1, 1);
+			addChild(apple);
 		}
 		
 		public function update(deltaTime:Number):void
 		{
-			
+			if (SkyKeyboard.instance.isPressed(SkyKey.M))
+			{
+				grid.visible = !grid.visible;
+			}
 		}
 	}
 }

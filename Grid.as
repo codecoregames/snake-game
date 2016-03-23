@@ -1,11 +1,15 @@
 package 
 {
+	import flash.display.Sprite;
 	import skysand.animation.SkyClip;
 	import skysand.render.RenderObject;
+	import skysand.animation.SkyAnimationCache;
 	
-	public class Grid
+	public class Grid extends RenderObject
 	{
-		
+		public static const CELL_FREE:uint = 0;
+		public static const CELL_APPLE:uint = 1;
+		public static const CELL_SNAKE:uint = 2;
 		
 		/**
 		 * Массив с картой.
@@ -18,7 +22,7 @@ package
 		
 		private var counter:int;
 		
-		private var sprite:SkyClip;
+		private var grid:SkyClip;
 		
 		public function Grid()
 		{
@@ -35,25 +39,25 @@ package
 			
 			for (var i:int = 0; i < nCells; i++) 
 			{
-				cells[i] = Config.CELL_FREE;
+				cells[i] = CELL_FREE;
 			}
 			
-			sprite = new SkyClip();
-			sprite.setAnimation("grid");
-		}
-		
-		public function getSprite():SkyClip
-		{
-			return sprite;
-		}
-		
-		public function add(x:int, y:int, clip:SkyClip, type:uint):void
-		{
-			clip.x = Config.CELL_SIZE * x - Config.HALF_CELL_SIZE;
-			clip.y = Config.CELL_SIZE * y - Config.HALF_CELL_SIZE;
+			var debugGrid:Sprite = new Sprite();
+			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5);
 			
-			sprite.addChildAt(clip, 0);
-			setCell(x, y, type);
+			for (i = 0; i < windowSizeX / cellSize; i++) 
+			{
+				for (var j:int = 0; j < windowSizeY / cellSize; j++) 
+				{
+					debugGrid.graphics.drawRect(i * cellSize, j * cellSize, cellSize, cellSize);
+				}
+			}
+			
+			SkyAnimationCache.instance.addAnimationFromSprite(debugGrid, "grid");
+			
+			grid = new SkyClip();
+			grid.setAnimation("grid");
+			addChild(grid);
 		}
 		
 		/**
@@ -73,11 +77,9 @@ package
 		 * @param	index номер ячейки.
 		 * @return возвращает то, что находиться в данной ячейке.
 		 */
-		public function getCell(index:int):uint
+		public function getCell(x:int, y:int):uint
 		{
-			index = index < 0 ? 0 : index > nCells - 1 ? nCells - 1 : index;
-			
-			return cells[index];
+			return cells[(y - 1) * gridWidth + (x - 1)];
 		}
 		
 		public function toString():String

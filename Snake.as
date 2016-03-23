@@ -173,25 +173,25 @@ package
 			
 			if (keyboard.isPressed(SkyKey.LEFT))
 			{
-				if (speedX == 0) speedX = -CELL_SIZE;
+				if (speedX == 0) speedX = -Config.CELL_SIZE;
 				speedY = 0;
 			}
 			
 			if (keyboard.isPressed(SkyKey.RIGHT))
 			{
-				if (speedX == 0) speedX = CELL_SIZE;
+				if (speedX == 0) speedX = Config.CELL_SIZE;
 				speedY = 0;
 			}
 			
 			if (keyboard.isPressed(SkyKey.UP))
 			{
-				if (speedY == 0) speedY = -CELL_SIZE;
+				if (speedY == 0) speedY = -Config.CELL_SIZE;
 				speedX = 0;
 			}
 			
 			if (keyboard.isPressed(SkyKey.DOWN))
 			{
-				if (speedY == 0) speedY = CELL_SIZE;
+				if (speedY == 0) speedY = Config.CELL_SIZE;
 				speedX = 0;
 			}
 			
@@ -206,33 +206,33 @@ package
 				
 				if (!isGameOver) updateBody();
 				
+				if (apple.hitTestObject(snakeHead))
+				{
+					apple.x = int((Math.random() * 800) / Config.CELL_SIZE) * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
+					apple.y = int((Math.random() * 800) / Config.CELL_SIZE) * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
+					
+					var bodyPart:SkyClip = new SkyClip();
+					bodyPart.setAnimation("head");
+					bodyPart.x = body.length - 1 > 0 ? body[body.length - 1].x : prev2.x;
+					bodyPart.y = body.length - 1 > 0 ? body[body.length - 1].y : prev2.y;
+					addChild(bodyPart);
+					body.push(bodyPart);
+				}
+				
+				for (var i:int = 0; i < body.length; i++) 
+				{
+					if (body[i].hitTestObject(snakeHead))
+					{
+						speedX = 0;
+						speedY = 0;
+						isGameOver = true;
+					}
+				}
+				
+				warp();
+				
 				delayCounter = 0;
 			}
-			
-			if (apple.hitTestObject(snakeHead))
-			{
-				apple.x = int((Math.random() * 800) / Config.CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-				apple.y = int((Math.random() * 800) / CELL_SIZE) * CELL_SIZE - CELL_SIZE / 2;
-				
-				var bodyPart:SkyClip = new SkyClip();
-				bodyPart.setAnimation("head");
-				bodyPart.x = body.length - 1 > 0 ? body[body.length - 1].x : prev2.x;
-				bodyPart.y = body.length - 1 > 0 ? body[body.length - 1].y : prev2.y;
-				addChild(bodyPart);
-				body.push(bodyPart);
-			}
-			
-			for (var i:int = 0; i < body.length; i++) 
-			{
-				if (body[i].hitTestObject(snakeHead))
-				{
-					speedX = 0;
-					speedY = 0;
-					isGameOver = true;
-				}
-			}
-			
-			warp();
 		}
 		
 		/**

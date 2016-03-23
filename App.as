@@ -31,23 +31,9 @@ package
 			apple.graphics.beginFill(0x18D187);
 			apple.graphics.drawRect( -Config.HALF_CELL_SIZE, -Config.HALF_CELL_SIZE, Config.CELL_SIZE, Config.CELL_SIZE);
 			
-			var debugGrid:Sprite = new Sprite();
-			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5);
-			
-			var nCells:int = int(Config.WINDOW_SIZE_X / Config.CELL_SIZE);
-			
-			for (var i:int = 0; i < nCells; i++) 
-			{
-				for (var j:int = 0; j < nCells; j++) 
-				{
-					debugGrid.graphics.drawRect(i * Config.CELL_SIZE, j * Config.CELL_SIZE, Config.CELL_SIZE, Config.CELL_SIZE);
-				}
-			}
-			
 			SkyAnimationCache.instance.addAnimationFromSprite(head, "head");
 			SkyAnimationCache.instance.addAnimationFromSprite(body, "body");
 			SkyAnimationCache.instance.addAnimationFromSprite(apple, "apple");
-			SkyAnimationCache.instance.addAnimationFromSprite(debugGrid, "grid");
 		}
 		
 		public function update(deltaTime:Number):void
