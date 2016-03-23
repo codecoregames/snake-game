@@ -4,10 +4,28 @@ package
 	
 	public class Apple extends ObjectBase
 	{
-		
 		public function Apple() 
 		{
+			sprite = null;
+			grid = null;
+			prev = null;
+			type = 0;
+		}
+		
+		public function setRandomPos():void
+		{
+			var nx:int = Math.ceil(grid.gwidth * Math.random());
+			var ny:int = Math.ceil(grid.gwidth * Math.random());
 			
+			var inPos:Boolean = setPos(nx, ny);
+			
+			while (!inPos)
+			{
+				nx = int(grid.gwidth * Math.random());
+				ny = int(grid.gwidth * Math.random());
+				
+				inPos = setPos(nx, ny);
+			}
 		}
 		
 		override public function init(grid:Grid):void
@@ -17,18 +35,8 @@ package
 			sprite = new SkyClip();
 			sprite.setAnimation("apple");
 			addChild(sprite);
-		}
-		
-		override public function setPos(x:int, y:int):Boolean
-		{
-			if (grid.getCell(x, y) != Grid.CELL_FREE) return false;
 			
-			grid.setCell(this.x, this.y, Grid.CELL_FREE);
-			grid.setCell(x, y, Grid.CELL_APPLE);
-			
-			super.setPos(x, y);
-			
-			return true
+			type = APPLE;
 		}
 		
 		override public function update(deltaTime:Number):void 

@@ -43,7 +43,7 @@ package
 			}
 			
 			var debugGrid:Sprite = new Sprite();
-			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5);
+			debugGrid.graphics.lineStyle(1, 0xDF0652);
 			
 			for (i = 0; i < windowSizeX / cellSize; i++) 
 			{
@@ -80,6 +80,11 @@ package
 		public function getCell(x:int, y:int):uint
 		{
 			return cells[(y - 1) * gridWidth + (x - 1)];
+		}
+		
+		public function get gwidth():int
+		{
+			return gridWidth;
 		}
 		
 		public function toString():String

@@ -16,6 +16,7 @@ package
 		public static const HALF_CELL_SIZE:uint = CELL_SIZE / 2;
 		
 		private var grid:Grid;
+		private var apple:Apple;
 		
 		public function Game()
 		{
@@ -64,10 +65,10 @@ package
 			grid.initialize(800, 800, Config.CELL_SIZE);
 			addChild(grid);
 			
-			var apple:Apple = new Apple();
+			apple = new Apple();
 			apple.init(grid);
 			apple.setPos(1, 1);
-			addChild(apple);
+			addChildAt(apple, 0);
 		}
 		
 		public function update(deltaTime:Number):void
@@ -75,6 +76,13 @@ package
 			if (SkyKeyboard.instance.isPressed(SkyKey.M))
 			{
 				grid.visible = !grid.visible;
+			}
+			
+			if (SkyKeyboard.instance.isPressed(SkyKey.N))
+			{
+				apple.setRandomPos();
+				
+				trace(grid.toString());
 			}
 		}
 	}
