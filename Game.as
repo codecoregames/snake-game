@@ -17,6 +17,7 @@ package
 		private var grid:Grid;
 		private var apple:Apple;
 		private var snake:Snake;
+		private var isPressed:Boolean;
 		
 		public function Game()
 		{
@@ -30,13 +31,15 @@ package
 			addChild(grid);
 			
 			apple = new Apple();
-			apple.init(grid);
+			apple.init();
 			apple.setPos(1, 1);
 			addChildAt(apple, 0);
 			
 			snake = new Snake();
-			snake.init(4, 4, grid);
+			snake.init(4, 4, 1);
 			addChildAt(snake, 1);
+			
+			isPressed = false;
 		}
 		
 		public function update(deltaTime:Number):void
@@ -51,43 +54,46 @@ package
 				snake.grownUp();
 			}
 			
-			if (SkyKeyboard.instance.isPressed(SkyKey.UP))
+			if (SkyKeyboard.instance.isPressed(SkyKey.UP) && !isPressed)
 			{
 				snake.moveUp();
+				isPressed = true;
 			}
 			
-			if (SkyKeyboard.instance.isPressed(SkyKey.DOWN))
+			if (SkyKeyboard.instance.isPressed(SkyKey.DOWN) && !isPressed)
 			{
 				snake.moveDown();
+				isPressed = true;
 			}
 			
-			if (SkyKeyboard.instance.isPressed(SkyKey.LEFT))
+			if (SkyKeyboard.instance.isPressed(SkyKey.LEFT) && !isPressed)
 			{
 				snake.moveLeft();
+				isPressed = true;
 			}
 			
-			if (SkyKeyboard.instance.isPressed(SkyKey.RIGHT))
+			if (SkyKeyboard.instance.isPressed(SkyKey.RIGHT) && !isPressed)
 			{
 				snake.moveRight();
+				isPressed = true;
 			}
 			
 			counter++;
 			
-			if (counter >= 10)
+			if (counter >= 5)
 			{
 				snake.update(deltaTime);
 				counter = 0;
+				isPressed = false;
 				
 				var sp:Point = snake.pos;
 				var ap:Point = apple.getPos();
 				
 				if (sp.x == ap.x && sp.y == ap.y)
 				{
-					apple.setRandomPos();
+					apple.setRandomPos(snake);
 					snake.grownUp();
-					
 				}
-				//trace(grid.toString());
 			}
 		}
 		

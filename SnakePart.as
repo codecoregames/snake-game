@@ -9,13 +9,12 @@ package
 			super();
 		}
 		
-		override public function init(grid:Grid):void 
+		override public function init():void 
 		{
-			super.init(grid);
+			super.init();
 			
 			sprite = new SkyClip();
 			sprite.setAnimation("body");
-			//sprite.visible = false;
 			addChild(sprite);
 			
 			type = Grid.CELL_SNAKE;

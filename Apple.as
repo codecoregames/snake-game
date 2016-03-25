@@ -1,5 +1,6 @@
 package 
 {
+	import flash.geom.Point;
 	import skysand.animation.SkyClip;
 	
 	public class Apple extends ObjectBase
@@ -9,25 +10,40 @@ package
 			super();
 		}
 		
-		public function setRandomPos():void
+		public function setRandomPos(snake:Snake):void
 		{
-			var nx:int = Math.ceil(grid.gwidth * Math.random());
-			var ny:int = Math.ceil(grid.gwidth * Math.random());
+			var nx:int = Math.ceil(Config.WINDOW_SIZE_X / Config.CELL_SIZE * Math.random());
+			var ny:int = Math.ceil(Config.WINDOW_SIZE_Y / Config.CELL_SIZE * Math.random());
 			
-			var inPos:Boolean = setPos(nx, ny);
-			
-			while (!inPos)
+			while (!checkFree(nx, ny, snake))
 			{
-				nx = int(grid.gwidth * Math.random());
-				ny = int(grid.gwidth * Math.random());
-				
-				inPos = setPos(nx, ny);
+				nx = Math.ceil(Config.WINDOW_SIZE_X / Config.CELL_SIZE * Math.random());
+				ny = Math.ceil(Config.WINDOW_SIZE_Y / Config.CELL_SIZE * Math.random());
+				trace("busy");
 			}
+			
+			setPos(nx, ny);
 		}
 		
-		override public function init(grid:Grid):void
+		private function checkFree(nx:int, ny:int, snake:Snake):Boolean
+		{trace("busy");
+			for (var i:int = 0; i < snake.length; i++) 
+			{
+				var part:SnakePart = snake.getSnakePart(i);
+				var point:Point = part.getPos();
+				
+				if (point.x == nx && point.y == ny)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		override public function init():void
 		{
-			super.init(grid);
+			super.init();
 			
 			sprite = new SkyClip();
 			sprite.setAnimation("apple");

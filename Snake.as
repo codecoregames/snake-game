@@ -8,6 +8,7 @@ package
 	import skysand.keyboard.SkyKey;
 	import skysand.keyboard.SkyKeyboard;
 	import skysand.render.RenderObject;
+	import skysand.utils.SkyMath;
 	
 	public class Snake extends RenderObject
 	{
@@ -35,9 +36,9 @@ package
 		
 		private var prev2:Point;
 		
-		private var grid:Grid;
-		
 		private var position:Point;
+		
+		private var speed:int;
 		
 		public function Snake() 
 		{
@@ -47,14 +48,14 @@ package
 		/**
 		 * Функция инициализации игры.
 		 */
-		public function init(x:int, y:int, grid:Grid):void
+		public function init(x:int, y:int, speed:int):void
 		{
-			this.grid = grid;
+			this.speed = speed;
 			
 			body = new Vector.<SnakePart>();
 			
 			head = new SnakePart();
-			head.init(grid);
+			head.init();
 			head.setPos(x, y);
 			addChild(head);
 			
@@ -69,26 +70,39 @@ package
 		
 		public function moveLeft():void
 		{
-			speedX = -1;
-			speedY = 0;
+			if (speedX == 0)
+			{	
+				speedX = -speed;
+				speedY = 0;
+			}
 		}
 		
 		public function moveRight():void
 		{
-			speedX = 1;
-			speedY = 0;
+			if (speedX == 0)
+			{	
+				speedX = speed;
+				speedY = 0;
+			}
 		}
 		
 		public function moveUp():void
 		{
-			speedY = -1;
-			speedX = 0;
+			if (speedY == 0)
+			{
+				speedY = -speed;
+				speedX = 0;
+			}
 		}
 		
 		public function moveDown():void
 		{
-			speedY = 1;
-			speedX = 0;
+			
+			if (speedY == 0)
+			{
+				speedY = speed;
+				speedX = 0;
+			}
 		}
 		
 		public function grownUp():void
@@ -96,7 +110,7 @@ package
 			var p:Point = body.length < 1 ? head.getPos() : body[body.length - 1].getPos();
 			
 			var bodyPart:SnakePart = new SnakePart();
-			bodyPart.init(grid);
+			bodyPart.init();
 			bodyPart.setPos(p.x, p.y);
 			addChild(bodyPart);
 			body.push(bodyPart);
@@ -111,27 +125,20 @@ package
 			
 			if (length == 0) return;
 			
-			prev1.x = body[0].x;
-			prev1.y = body[0].y;
-			
-			body[0].x = prev2.x;
-			body[0].y = prev2.y;
+			prev1.copyFrom(body[0].getPos());
+			body[0].setPos(prev2.x, prev2.y);
 			
 			for (var i:int = 1; i < length; i++) 
 			{
 				if (i % 2 == 1)
 				{
-					prev2.x = body[i].x;
-					prev2.y = body[i].y;
-					body[i].x = prev1.x;
-					body[i].y = prev1.y;
+					prev2.copyFrom(body[i].getPos());
+					body[i].setPos(prev1.x, prev1.y);
 				}
 				else
 				{
-					prev1.x = body[i].x;
-					prev1.y = body[i].y;
-					body[i].x = prev2.x;
-					body[i].y = prev2.y;
+					prev1.copyFrom(body[i].getPos());
+					body[i].setPos(prev2.x, prev2.y);
 				}
 			}
 		}
@@ -149,10 +156,10 @@ package
 		{
 			if (speedX != 0 || speedY != 0)
 			{
+				prev2.setTo(position.x, position.y);
+				
 				position.x += speedX;
 				position.y += speedY;
-				prev2.x = head.x;
-				prev2.y = head.y;
 				
 				warp();
 				
@@ -230,29 +237,41 @@ package
 			}*/
 		}
 		
+		public function getSnakePart(index:int):SnakePart
+		{
+			return body[index];
+		}
+		
+		public function get length():int
+		{
+			return body.length;
+		}
+		
 		/**
 		 * Функция телепортации змейки.
 		 */
 		private function warp():void
 		{
-			if (position.x > grid.gwidth)
+			var w:int = Config.WINDOW_SIZE_X / Config.CELL_SIZE;
+			
+			if (position.x > w)
 			{
 				position.x = 1;
 			}
 			
 			if (position.x < 1)
 			{
-				position.x = grid.gwidth;
+				position.x = w;
 			}
 			
-			if (position.y > grid.gwidth)
+			if (position.y > w)
 			{
 				position.y = 1;
 			}
 			
 			if (position.y < 1)
 			{
-				position.y = grid.gwidth;
+				position.y = w;
 			}
 		}
 	}
