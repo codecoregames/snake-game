@@ -150,9 +150,10 @@ package
 			
 			for (var i:int = 2; i < length; i++) 
 			{
-				if (position.x == body[i].x && position.y == body[i].y)
+				var point:Point = body[i].getPos();
+				
+				if (position.x == point.x && position.y == point.y)
 				{
-					trace("omnom");
 					return true;
 				}
 			}
