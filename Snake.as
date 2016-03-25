@@ -2,6 +2,7 @@ package
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import mx.controls.RichTextEditor__embed_mxml_assets_icon_style_bold_png_1028202784;
 	import skysand.animation.SkyAnimationCache;
 	import skysand.animation.SkyClip;
 	import skysand.interfaces.IUpdatable;
@@ -143,6 +144,22 @@ package
 			}
 		}
 		
+		public function get isAteThemself():Boolean
+		{
+			var length:int = body.length;
+			
+			for (var i:int = 2; i < length; i++) 
+			{
+				if (position.x == body[i].x && position.y == body[i].y)
+				{
+					trace("omnom");
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
 		public function get pos():Point
 		{
 			return position;
@@ -167,74 +184,6 @@ package
 				
 				updateBody();
 			}
-			
-			/*if (keyboard.anyKeyDown)
-			{
-				isGameOver = false;
-			}
-			
-			if (keyboard.isPressed(SkyKey.LEFT))
-			{
-				if (speedX == 0) speedX = -Config.CELL_SIZE;
-				speedY = 0;
-			}
-			
-			if (keyboard.isPressed(SkyKey.RIGHT))
-			{
-				if (speedX == 0) speedX = Config.CELL_SIZE;
-				speedY = 0;
-			}
-			
-			if (keyboard.isPressed(SkyKey.UP))
-			{
-				if (speedY == 0) speedY = -Config.CELL_SIZE;
-				speedX = 0;
-			}
-			
-			if (keyboard.isPressed(SkyKey.DOWN))
-			{
-				if (speedY == 0) speedY = Config.CELL_SIZE;
-				speedX = 0;
-			}
-			
-			delayCounter++;
-			
-			if (delayCounter >= 60 / NUM_OF_UPDATE)
-			{
-				prev2.setTo(snakeHead.x, snakeHead.y);
-				
-				snakeHead.x += speedX;
-				snakeHead.y += speedY;
-				
-				if (!isGameOver) updateBody();
-				
-				if (apple.hitTestObject(snakeHead))
-				{
-					apple.x = int((Math.random() * 800) / Config.CELL_SIZE) * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
-					apple.y = int((Math.random() * 800) / Config.CELL_SIZE) * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
-					
-					var bodyPart:SkyClip = new SkyClip();
-					bodyPart.setAnimation("head");
-					bodyPart.x = body.length - 1 > 0 ? body[body.length - 1].x : prev2.x;
-					bodyPart.y = body.length - 1 > 0 ? body[body.length - 1].y : prev2.y;
-					addChild(bodyPart);
-					body.push(bodyPart);
-				}
-				
-				for (var i:int = 0; i < body.length; i++) 
-				{
-					if (body[i].hitTestObject(snakeHead))
-					{
-						speedX = 0;
-						speedY = 0;
-						isGameOver = true;
-					}
-				}
-				
-				warp();
-				
-				delayCounter = 0;
-			}*/
 		}
 		
 		public function getSnakePart(index:int):SnakePart

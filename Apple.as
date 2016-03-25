@@ -19,14 +19,13 @@ package
 			{
 				nx = Math.ceil(Config.WINDOW_SIZE_X / Config.CELL_SIZE * Math.random());
 				ny = Math.ceil(Config.WINDOW_SIZE_Y / Config.CELL_SIZE * Math.random());
-				trace("busy");
 			}
 			
 			setPos(nx, ny);
 		}
 		
 		private function checkFree(nx:int, ny:int, snake:Snake):Boolean
-		{trace("busy");
+		{
 			for (var i:int = 0; i < snake.length; i++) 
 			{
 				var part:SnakePart = snake.getSnakePart(i);

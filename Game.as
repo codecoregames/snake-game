@@ -18,6 +18,8 @@ package
 		private var apple:Apple;
 		private var snake:Snake;
 		private var isPressed:Boolean;
+		private var counter:int = 0;
+		private var gameover:Boolean;
 		
 		public function Game()
 		{
@@ -40,6 +42,7 @@ package
 			addChildAt(snake, 1);
 			
 			isPressed = false;
+			gameover = false;
 		}
 		
 		public function update(deltaTime:Number):void
@@ -47,11 +50,6 @@ package
 			if (SkyKeyboard.instance.isPressed(SkyKey.M))
 			{
 				grid.visible = !grid.visible;
-			}
-			
-			if (SkyKeyboard.instance.isPressed(SkyKey.N))
-			{
-				snake.grownUp();
 			}
 			
 			if (SkyKeyboard.instance.isPressed(SkyKey.UP) && !isPressed)
@@ -80,23 +78,31 @@ package
 			
 			counter++;
 			
-			if (counter >= 5)
+			if (counter >= 10)
 			{
-				snake.update(deltaTime);
-				counter = 0;
-				isPressed = false;
 				
-				var sp:Point = snake.pos;
-				var ap:Point = apple.getPos();
 				
-				if (sp.x == ap.x && sp.y == ap.y)
+				if (!gameover)
 				{
-					apple.setRandomPos(snake);
-					snake.grownUp();
+					snake.update(deltaTime);
+					counter = 0;
+					isPressed = false;
+					
+					var sp:Point = snake.pos;
+					var ap:Point = apple.getPos();
+					
+					if (sp.x == ap.x && sp.y == ap.y)
+					{
+						apple.setRandomPos(snake);
+						snake.grownUp();
+					}
+				}
+				
+				if (snake.isAteThemself)
+				{
+					gameover = true;
 				}
 			}
 		}
-		
-		private var counter:int = 0;
 	}
 }
