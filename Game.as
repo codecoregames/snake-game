@@ -10,187 +10,52 @@ package
 	import skysand.render.RenderObject;
 	import skysand.utils.SkyVector2D;
 	
-	public class Game extends RenderObject implements IUpdatable
-	{
-		private const CELL_SIZE:uint = 50;
-		private const MAX_SPEED:uint = 50;
-		
-		private var speed:SkyVector2D;
-		private var grid:SkyClip;
-		private var snakeHead:SkyClip;
-		private var keyboard:SkyKeyboard;
-		private var delay:int = 0;
-		private var snakeBody:Vector.<SkyClip>;
-		private var prev:SkyVector2D = new SkyVector2D();
-		private var body:BodyPartData;
-		private var apple:SkyClip;
-		private var nParts:int = 0;
-		
+	public class Game extends RenderObject
+	{		
+		private var grid:Grid;
 		public function Game()
 		{
-			initialize();
-		}
-		
-		private function initialize():void
-		{
-			prepareGraphics();
-			
-			keyboard = SkyKeyboard.instance;
-			
-			Console.instance.registerCommand("debug", debug, []);
-			
-			apple = new SkyClip();
-			apple.setAnimation("apple");
-			apple.x = int(int(Math.random() * 800) / CELL_SIZE) * CELL_SIZE + CELL_SIZE * 0.5;
-			apple.y = int(int(Math.random() * 800) / CELL_SIZE) * CELL_SIZE + CELL_SIZE * 0.5;
+			/*prepareGraphics();
+			initialize();*/
+			var apple:Apple = new Apple();
+			apple.init();
+			apple.setPosition(4, 5);
 			addChild(apple);
+		}
+		public function initialize():void
+		{
+			grid = new Grid();
+			grid.initialize(800, 800, Grid.CELL_SIZE);
+			addChild(grid.getSprite());
+			var apple:SkyClip = new SkyClip();
+			apple.setAnimation("apple");
+			grid.add(7, 4, apple, Grid.CELL_APPLE);
 			
-			snakeHead = new SkyClip();
-			snakeHead.setAnimation("rectangle");
-			snakeHead.x = CELL_SIZE * 0.5 + CELL_SIZE * 10;
-			snakeHead.y = CELL_SIZE * 0.5 + CELL_SIZE * 10;
-			addChild(snakeHead);
-			
-			snakeBody = new Vector.<SkyClip>();
-			body = new BodyPartData();
-			
-			for (var i:int = 0; i < 10; i++) 
-			{
-				var bodyPart:SkyClip = new SkyClip();
-				bodyPart.setAnimation("rectangle");
-				bodyPart.x = snakeHead.x + snakeHead.width * i;
-				bodyPart.y = snakeHead.y;
-				//bodyPart.visible = false;
-				addChild(bodyPart);
-				snakeBody.push(bodyPart);
-			}
-			
-			grid = new SkyClip();
-			grid.setAnimation("grid");
-			addChild(grid);
-			
-			speed = new SkyVector2D();
 		}
 		
-		private function prepareGraphics():void
+		public function prepareGraphics():void
 		{
-			var gridSprite:Sprite = new Sprite();
-			gridSprite.graphics.lineStyle(1, 0x1BA5E0);
+			var debugGrid:Sprite = new Sprite();
+			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5); //задаём отрисовку квадратов линиями(толщина, цвет линии, прозрачность).
 			
-			var count:int = 800 / CELL_SIZE;
+			var nCells:int = int(800 / Grid.CELL_SIZE); //получаем количество клеток на экране.
 			
-			for (var i:int = 0; i < count; i++) 
+			for (var i:int = 0; i < nCells; i++) 
 			{
-				for (var j:int = 0; j < count; j++) 
+				for (var j:int = 0; j < nCells; j++) 
 				{
-					gridSprite.graphics.drawRect(CELL_SIZE * i, CELL_SIZE * j, CELL_SIZE, CELL_SIZE);
+					debugGrid.graphics.drawRect(i * Grid.CELL_SIZE, j * Grid.CELL_SIZE, Grid.CELL_SIZE, Grid.CELL_SIZE);
 				}
 			}
-			
-			var rect:Sprite = new Sprite();
-			rect.graphics.beginFill(0xAF0A82);
-			rect.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
-			
 			var apple:Sprite = new Sprite();
-			apple.graphics.beginFill(0x3FCF7C);
-			apple.graphics.drawRect( -CELL_SIZE / 2, -CELL_SIZE / 2, CELL_SIZE, CELL_SIZE);
-			
-			SkyAnimationCache.instance.addAnimationFromSprite(gridSprite, "grid");
-			SkyAnimationCache.instance.addAnimationFromSprite(rect, "rectangle");
+			apple.graphics.beginFill(0x18D187);
+			apple.graphics.drawCircle( 0, 0, Grid.HALF_CELL_SIZE);
+			SkyAnimationCache.instance.addAnimationFromSprite(debugGrid, "grid");
 			SkyAnimationCache.instance.addAnimationFromSprite(apple, "apple");
 		}
-		
-		private function debug(value:String):void
+		public function update():void
 		{
-			if (value == "on")
-			{
-				grid.visible = true;
-			}
-			else
-			{
-				grid.visible = false;
-			}
-		}
-		
-		private var p:SkyVector2D = new SkyVector2D();
-		
-		private function updateSnakeBody():void
-		{
-			p.x = snakeBody[0].x;
-			p.y = snakeBody[0].y;
 			
-			snakeBody[0].x = prev.x;
-			snakeBody[0].y = prev.y;
-			
-			var length:int = snakeBody.length;
-			
-			for (var i:int = 1; i < length; i++) 
-			{
-				if (i % 2 == 1)
-				{
-					prev.x = snakeBody[i].x;
-					prev.y = snakeBody[i].y;
-					snakeBody[i].x = p.x;
-					snakeBody[i].y = p.y;
-				}
-				else
-				{
-					p.x = snakeBody[i].x;
-					p.y = snakeBody[i].y;
-					snakeBody[i].x = prev.x;
-					snakeBody[i].y = prev.y;
-				}
-			}
-		}
-		
-		public function update(deltaTime:Number):void
-		{
-			delay++;
-			
-			if (delay == 10)
-			{
-				prev.setTo(snakeHead.x, snakeHead.y);
-				
-				snakeHead.x += speed.x;
-				snakeHead.y += speed.y;
-				
-				updateSnakeBody();
-				
-				delay = 0;
-			}
-			
-			if (apple.hitTestObject(snakeHead))
-			{
-				apple.x = int(int(Math.random() * 800) / CELL_SIZE) * CELL_SIZE + CELL_SIZE * 0.5;
-				apple.y = int(int(Math.random() * 800) / CELL_SIZE) * CELL_SIZE + CELL_SIZE * 0.5;
-				
-				var bodyPart:SkyClip = new SkyClip();
-				bodyPart.setAnimation("rectangle");
-				//bodyPart.x = snakeHead.x + snakeHead.width;
-				//bodyPart.y = snakeHead.y;
-				addChildAt(bodyPart, 0);
-				snakeBody.push(bodyPart);
-			}
-			
-			if (keyboard.isPressed(SkyKey.LEFT))
-			{
-				if (speed.x == 0) speed.setTo( -MAX_SPEED, 0);
-			}
-			
-			if (keyboard.isPressed(SkyKey.RIGHT))
-			{
-				if (speed.x == 0) speed.setTo(MAX_SPEED, 0);
-			}
-			
-			if (keyboard.isPressed(SkyKey.UP))
-			{
-				if (speed.y == 0) speed.setTo(0, -MAX_SPEED);
-			}
-			
-			if (keyboard.isPressed(SkyKey.DOWN))
-			{
-				if (speed.y == 0) speed.setTo(0, MAX_SPEED);
-			}
 		}
 	}
 }

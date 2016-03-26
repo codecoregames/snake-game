@@ -1,0 +1,27 @@
+package 
+{
+	import adobe.utils.CustomActions;
+	public class Apple extends ObjectBase
+	{
+		private var snake:Snake;
+		public function Apple() 
+		{
+			super();
+		}
+		public function setRandomPosition():void
+		{
+			var nx:int = Math.ceil(Config.WINDOW_WIDTH * Math.random / Config.SELL_SIZE)
+			var ny:int = Math.ceil(Config.WINDOW_HEIGHT * Math.random /Config.SELL_SIZE)
+		}
+		public function setCurrentSnake(snake:Snake):void
+		{
+			this.snake = snake
+		}
+		override public function init():void 
+		{
+			super.init();
+			sprite.setAnimation ("apple");
+		}
+	}
+
+}
