@@ -9,8 +9,9 @@ package
 	import skysand.keyboard.SkyKeyboard;
 	import skysand.render.RenderObject;
 	
-	public class Snake extends RenderObject implements IUpdatable
+	public class Snake extends RenderObject
 	{
+		private var body:Vector.<SnakePart>
 		/**
 		 * Размер клетки.
 		 */
@@ -80,10 +81,7 @@ package
 		 * Конструктор класса(вызывается при создании класса).
 		 */
 		public function Snake() 
-		{
-			//Вызываем в конструкторе функцию prepareGraphics для использования графики, которую мы рисовали, в игре.
-			prepareGraphics();
-			
+		{			
 			//Вызываем функцию инициализации init нашей игры.
 			init();
 		}
@@ -93,7 +91,9 @@ package
 		 */
 		private function init():void
 		{
-			keyboard = SkyKeyboard.instance;
+			body = new Vector.<SnakePart>;
+			
+			/*keyboard = SkyKeyboard.instance;
 			
 			apple = new SkyClip(); //Создаём клип для отображения яблока.
 			apple.setAnimation("apple"); //Даём ему картину, которую он будет отображать.
@@ -120,13 +120,8 @@ package
 			speedX = 0;
 			speedY = 0;
 			isGameOver = false;
+			*/
 		}
-		
-		/**
-		 * Подготовить графику для использования в игре.
-		 */
-		private function prepareGraphics():void
-		{
 			var head:Sprite = new Sprite();	//cоздаём спрайт с именем head.
 			head.graphics.beginFill(0xC82286); //c помощью методов graphics задаём цвет, вызывая функцию beginFill.
 			head.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE); //с помощью функции drawRect рисуем квадрат со сторонами CELL_SIZE.
@@ -198,13 +193,25 @@ package
 				}
 			}
 		}
-		
+		public function grownUp():void
+		{
+			var part: SnakePart = new SnakePart();
+			part.init();
+			part.setPosition(1, 1);
+			addChild(part);
+			body.push(part);
+		}
+		public function getBodyPartPosition(index:int):Point
+		{
+			return body[index].position;
+		}
 		/**
 		 * Функция для обновления приложения.
 		 * @param	deltaTime промежуток времени прошедший с момента обновления кадра.
 		 */
-		public function update(deltaTime:Number):void
+		public function update():void
 		{
+			/*
 			if (keyboard.anyKeyDown)
 			{
 				isGameOver = false;
@@ -272,6 +279,7 @@ package
 			}
 			
 			warp();
+			*/
 		}
 		
 		/**

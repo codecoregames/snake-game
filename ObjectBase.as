@@ -6,7 +6,8 @@ package
 	
 	public class ObjectBase extends RenderObject
 	{
-		protected var position:Point;
+		protected var _position:Point;
+		protected var sprite:SkyClip;
 		public function init():void
 		{
 			_position = new Point();
@@ -32,7 +33,7 @@ package
 			this.x = x * Config.SELL_SIZE - Config.HALF_SELL_SIZE;
 			this.y = y * Config.SELL_SIZE - Config.HALF_SELL_SIZE;
 		}
-		public function get position():Point;
+		public function get position():Point
 		{
 			return _position;
 		}

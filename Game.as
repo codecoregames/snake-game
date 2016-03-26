@@ -13,6 +13,7 @@ package
 	public class Game extends RenderObject
 	{		
 		private var grid:Grid;
+		private  var apple:Apple;
 		public function Game()
 		{
 			/*prepareGraphics();
@@ -20,7 +21,7 @@ package
 			var apple:Apple = new Apple();
 			apple.init();
 			apple.setPosition(4, 5);
-			addChild(apple);
+			addChild(snake);
 		}
 		public function initialize():void
 		{
@@ -55,6 +56,7 @@ package
 		}
 		public function update():void
 		{
+			apple.setRandomPosition();
 			
 		}
 	}
