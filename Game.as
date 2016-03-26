@@ -26,14 +26,20 @@ package
 		private var apple:SkyClip;
 		private var nParts:int = 0;
 		
+		private var apple:Apple;
+		private var snake:Snake;
+		
 		public function Game()
 		{
 			//initialize();
-			
+			snake = new Snake();
+			snake.init();
+			addChild(snake);
 			var apple:Apple = new Apple();
 			apple.init();
 			apple.setPosition(4, 5);
 			addChild(apple);
+			
 		}
 		
 		private function initialize():void

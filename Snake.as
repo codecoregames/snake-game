@@ -9,7 +9,7 @@ package
 	import skysand.keyboard.SkyKeyboard;
 	import skysand.render.RenderObject;
 	
-	public class Snake extends RenderObject implements IUpdatable
+	public class Snake extends RenderObject
 	{
 		/**
 		 * Размер клетки.
@@ -59,7 +59,7 @@ package
 		/**
 		 * Массив с клипами(частями змейки).
 		 */
-		private var body:Vector.<SkyClip>;
+		private var body:Vector.<SnakePart>;
 		
 		/**
 		 * 1 точка для расчёта позиции предыдущей части змейки.
@@ -93,7 +93,7 @@ package
 		 */
 		private function init():void
 		{
-			keyboard = SkyKeyboard.instance;
+			/*keyboard = SkyKeyboard.instance;
 			
 			apple = new SkyClip(); //Создаём клип для отображения яблока.
 			apple.setAnimation("apple"); //Даём ему картину, которую он будет отображать.
@@ -109,62 +109,38 @@ package
 			
 			var grid:SkyClip = new SkyClip();
 			grid.setAnimation("grid");
-			addChild(grid);
+			addChild(grid);*/
 			
-			body = new Vector.<SkyClip>();
+			body = new Vector.<SnakePart>();
 			
-			prev1 = new Point();
+			/*prev1 = new Point();
 			prev2 = new Point();
 			
 			delayCounter = 0;
 			speedX = 0;
 			speedY = 0;
-			isGameOver = false;
+			isGameOver = false;*/
 		}
 		
-		/**
-		 * Подготовить графику для использования в игре.
-		 */
-		private function prepareGraphics():void
+		
+		public function grownUp():void
 		{
-			var head:Sprite = new Sprite();	//cоздаём спрайт с именем head.
-			head.graphics.beginFill(0xC82286); //c помощью методов graphics задаём цвет, вызывая функцию beginFill.
-			head.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE); //с помощью функции drawRect рисуем квадрат со сторонами CELL_SIZE.
-			
-			//head.graphics.drawRect(0, 0, CELL_SIZE, CELL_SIZE); если написать так, то центр по умолчанию будет в левом верхнем углу.
-			//первым двум координатам мы указываем то, где будет центр у фигуры.
-			//(0, 0) - левый верхний
-			//(-CELL_SIZE, -CELL_SIZE) - правый нижний.
-			//(-CELL_SIZE / 2, -CELL_SIZE / 2) - центр.
-			
-			var body:Sprite = new Sprite();
-			body.graphics.beginFill(0xE0549A);
-			body.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE);
-			
-			var apple:Sprite = new Sprite();
-			apple.graphics.beginFill(0x18D187);
-			apple.graphics.drawRect( -HALF_CELL_SIZE, -HALF_CELL_SIZE, CELL_SIZE, CELL_SIZE);
-			
-			var debugGrid:Sprite = new Sprite();
-			debugGrid.graphics.lineStyle(1, 0xDF0652, 0.5); //задаём отрисовку квадратов линиями(толщина, цвет линии, прозрачность).
-			
-			var nCells:int = int(800 / CELL_SIZE); //получаем количество клеток на экране.
-			
-			for (var i:int = 0; i < nCells; i++) 
-			{
-				for (var j:int = 0; j < nCells; j++) 
-				{
-					debugGrid.graphics.drawRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-				}
-			}
-			
-			//Добавляем полученные фигуры в хранилище SkyAnimationCache. 1 параметр - что нужно сохранить, 2 параметр - имя сохраняемой картинки\анимации.
-			SkyAnimationCache.instance.addAnimationFromSprite(head, "head");
-			SkyAnimationCache.instance.addAnimationFromSprite(body, "body");
-			SkyAnimationCache.instance.addAnimationFromSprite(apple, "apple");
-			SkyAnimationCache.instance.addAnimationFromSprite(debugGrid, "grid");
+			var part:SnakePart = new SnakePart();
+			part.init();
+			part.setPosition(1, 1);
+			addChild(part);
+			body.push(part);
 		}
 		
+		public function getBodyPartPosition(index:int):Point
+		{
+			return body[index].position;
+		}
+		
+		public function get length():int
+		{
+			return body.length;
+		}
 		/**
 		 * Фунцкия для обновления тела змейки(расчитывает положение каждой части тела змейки).
 		 */
@@ -203,9 +179,9 @@ package
 		 * Функция для обновления приложения.
 		 * @param	deltaTime промежуток времени прошедший с момента обновления кадра.
 		 */
-		public function update(deltaTime:Number):void
+		public function update():void
 		{
-			if (keyboard.anyKeyDown)
+			/*if (keyboard.anyKeyDown)
 			{
 				isGameOver = false;
 			}
@@ -271,7 +247,7 @@ package
 				}
 			}
 			
-			warp();
+			warp();*/
 		}
 		
 		/**

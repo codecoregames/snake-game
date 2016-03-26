@@ -1,10 +1,7 @@
 package 
 {
-	/**
-	 * ...
-	 * @author slava
-	 */
-	public class SnakePart 
+	
+	public class SnakePart extends ObjectBase
 	{
 		
 		public function SnakePart() 
@@ -12,6 +9,10 @@ package
 			
 		}
 		
+		override public function init():void{
+			super.init();
+			sprite.setAnimation("body");
+		}
 	}
 
 }

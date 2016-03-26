@@ -46,7 +46,7 @@ package
 		
 		public function update(deltaTime:Number):void
 		{
-			
+			game.update();
 		}
 		
 	}
