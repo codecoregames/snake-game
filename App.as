@@ -7,9 +7,14 @@ package
 	
 	public class App extends RenderObject implements IUpdatable
 	{
+		private var game:Game;
+		
 		public function App() 
 		{
 			prepareGraphics();
+			
+			game = new Game();
+			addChild(game);
 		}
 		
 		private function prepareGraphics():void

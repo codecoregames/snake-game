@@ -24,10 +24,19 @@ package
 		
 		public function setPosition(x:int, y:int):void
 		{
-			_position.setTo(x, y);
+			_position.x = x;
+			_position.y = y;
 			
-			sprite.x = x * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
-			sprite.y = y * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
+			this.x = x * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
+			this.y = y * Config.CELL_SIZE - Config.HALF_CELL_SIZE;
+		}
+		
+		public function destroy():void
+		{
+			removeChild(sprite);
+			sprite.free();
+			sprite = null;
+			_position = null;
 		}
 		
 		public function get position():Point
