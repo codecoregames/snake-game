@@ -21,14 +21,14 @@ package
 		{
 			this.snake = snake;
 		}
-		
+		/*
 		private function checkFree(x:int, y:int):Boolean
 		{
 			for (var i:int = 0; i < 0; i++) 
 			{
 				
 			}
-		}
+		}*/
 		
 		override public function init():void
 		{
