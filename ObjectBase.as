@@ -4,10 +4,10 @@ package
 	 * ...
 	 * @author ...
 	 */
-	public class Game 
+	public class ObjectBase 
 	{
 		
-		public function Game() 
+		public function ObjectBase() 
 		{
 			
 		}
