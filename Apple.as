@@ -1,35 +1,44 @@
 package 
 {
 	import flash.geom.Point;
-	import skysand.animation.SkyClip;
 	
 	public class Apple extends ObjectBase
 	{
+		private var snake:Snake;
+		
 		public function Apple() 
 		{
 			super();
 		}
 		
-		public function setRandomPos(snake:Snake):void
+		public function setCurrentSnake(snake:Snake):void
 		{
-			var nx:int = Math.ceil(Config.WINDOW_SIZE_X / Config.CELL_SIZE * Math.random());
-			var ny:int = Math.ceil(Config.WINDOW_SIZE_Y / Config.CELL_SIZE * Math.random());
+			this.snake = snake;
 			
-			while (!checkFree(nx, ny, snake))
-			{
-				nx = Math.ceil(Config.WINDOW_SIZE_X / Config.CELL_SIZE * Math.random());
-				ny = Math.ceil(Config.WINDOW_SIZE_Y / Config.CELL_SIZE * Math.random());
-			}
-			
-			setPos(nx, ny);
+			trace(snake==null);
 		}
 		
-		private function checkFree(nx:int, ny:int, snake:Snake):Boolean
+		public function setRandomPosition():void
 		{
+			var nx:int = Math.ceil(Config.NCELLS_X * Math.random());
+			var ny:int = Math.ceil(Config.NCELLS_Y * Math.random());
+			
+			while (!checkFree(nx, ny))
+			{
+				nx = Math.ceil(Config.NCELLS_X * Math.random());
+				ny = Math.ceil(Config.NCELLS_Y * Math.random());
+			}
+			
+			setPosition(nx, ny);
+		}
+		
+		private function checkFree(nx:int, ny:int):Boolean
+		{
+			if (snake == null) return false;
+			
 			for (var i:int = 0; i < snake.length; i++) 
 			{
-				var part:SnakePart = snake.getSnakePart(i);
-				var point:Point = part.getPos();
+				var point:Point = snake.getPartPosition(i);
 				
 				if (point.x == nx && point.y == ny)
 				{
@@ -40,20 +49,18 @@ package
 			return true;
 		}
 		
+		override public function destroy():void 
+		{
+			super.destroy();
+			
+			snake = null;
+		}
+		
 		override public function init():void
 		{
 			super.init();
 			
-			sprite = new SkyClip();
 			sprite.setAnimation("apple");
-			addChild(sprite);
-			
-			type = Grid.CELL_APPLE;
-		}
-		
-		override public function update(deltaTime:Number):void 
-		{
-			super.update(deltaTime);
 		}
 	}
 }

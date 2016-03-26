@@ -2,44 +2,19 @@ package
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
-	import mx.controls.RichTextEditor__embed_mxml_assets_icon_style_bold_png_1028202784;
-	import skysand.animation.SkyAnimationCache;
 	import skysand.animation.SkyClip;
-	import skysand.interfaces.IUpdatable;
-	import skysand.keyboard.SkyKey;
-	import skysand.keyboard.SkyKeyboard;
 	import skysand.render.RenderObject;
-	import skysand.utils.SkyMath;
 	
 	public class Snake extends RenderObject
 	{
-		/**
-		 * Скорость по x;
-		 */
 		private var speedX:int;
-		
-		/**
-		 * Скорость по y;
-		 */
 		private var speedY:int;
-		
-		/**
-		 * Клип для отображения головы змейки.
-		 */
 		private var head:SnakePart;
-		
-		/**
-		 * Массив с клипами(частями змейки).
-		 */
 		private var body:Vector.<SnakePart>;
-		
 		private var prev1:Point;
-		
 		private var prev2:Point;
-		
 		private var position:Point;
-		
-		private var speed:int;
+		public var speed:int;
 		
 		public function Snake() 
 		{
@@ -49,7 +24,7 @@ package
 		/**
 		 * Функция инициализации игры.
 		 */
-		public function init(x:int, y:int, speed:int):void
+		public function init(x:int, y:int, speed:int = 1):void
 		{
 			this.speed = speed;
 			
@@ -57,7 +32,7 @@ package
 			
 			head = new SnakePart();
 			head.init();
-			head.setPos(x, y);
+			head.setPosition(x, y);
 			addChild(head);
 			
 			prev1 = new Point();
@@ -98,7 +73,6 @@ package
 		
 		public function moveDown():void
 		{
-			
 			if (speedY == 0)
 			{
 				speedY = speed;
@@ -108,11 +82,11 @@ package
 		
 		public function grownUp():void
 		{
-			var p:Point = body.length < 1 ? head.getPos() : body[body.length - 1].getPos();
+			var p:Point = body.length < 1 ? head.position : body[body.length - 1].position;
 			
 			var bodyPart:SnakePart = new SnakePart();
 			bodyPart.init();
-			bodyPart.setPos(p.x, p.y);
+			bodyPart.setPosition(p.x, p.y);
 			addChild(bodyPart);
 			body.push(bodyPart);
 		}
@@ -126,31 +100,28 @@ package
 			
 			if (length == 0) return;
 			
-			prev1.copyFrom(body[0].getPos());
-			body[0].setPos(prev2.x, prev2.y);
-			
-			for (var i:int = 1; i < length; i++) 
+			for (var i:int = 0; i < length; i++) 
 			{
-				if (i % 2 == 1)
+				if (i % 2 == 0)
 				{
-					prev2.copyFrom(body[i].getPos());
-					body[i].setPos(prev1.x, prev1.y);
+					prev2.copyFrom(body[i].position);
+					body[i].setPosition(prev1.x, prev1.y);
 				}
 				else
 				{
-					prev1.copyFrom(body[i].getPos());
-					body[i].setPos(prev2.x, prev2.y);
+					prev1.copyFrom(body[i].position);
+					body[i].setPosition(prev2.x, prev2.y);
 				}
 			}
 		}
 		
-		public function get isAteThemself():Boolean
+		public function get isAteItself():Boolean
 		{
 			var length:int = body.length;
 			
 			for (var i:int = 2; i < length; i++) 
 			{
-				var point:Point = body[i].getPos();
+				var point:Point = body[i].position;
 				
 				if (position.x == point.x && position.y == point.y)
 				{
@@ -161,7 +132,7 @@ package
 			return false;
 		}
 		
-		public function get pos():Point
+		public function get headPosition():Point
 		{
 			return position;
 		}
@@ -174,22 +145,22 @@ package
 		{
 			if (speedX != 0 || speedY != 0)
 			{
-				prev2.setTo(position.x, position.y);
+				prev1.setTo(position.x, position.y);
 				
 				position.x += speedX;
 				position.y += speedY;
 				
 				warp();
 				
-				head.setPos(position.x, position.y);
+				head.setPosition(position.x, position.y);
 				
 				updateBody();
 			}
 		}
 		
-		public function getSnakePart(index:int):SnakePart
+		public function getPartPosition(index:int):Point
 		{
-			return body[index];
+			return body[index].position;
 		}
 		
 		public function get length():int
@@ -202,26 +173,24 @@ package
 		 */
 		private function warp():void
 		{
-			var w:int = Config.WINDOW_SIZE_X / Config.CELL_SIZE;
-			
-			if (position.x > w)
+			if (position.x > Config.NCELLS_X)
 			{
 				position.x = 1;
 			}
 			
 			if (position.x < 1)
 			{
-				position.x = w;
+				position.x = Config.NCELLS_X;
 			}
 			
-			if (position.y > w)
+			if (position.y > Config.NCELLS_Y)
 			{
 				position.y = 1;
 			}
 			
 			if (position.y < 1)
 			{
-				position.y = w;
+				position.y = Config.NCELLS_Y;
 			}
 		}
 	}

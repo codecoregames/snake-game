@@ -26,6 +26,7 @@ package
 		private var bestScoreField:SkyTextField;
 		private var score:int;
 		private var data:SaveLoadData;
+		private var plusScoreField:SkyTextField;
 		
 		public function Game()
 		{
@@ -38,14 +39,15 @@ package
 			grid.initialize(800, 800, Config.CELL_SIZE);
 			addChild(grid);
 			
-			apple = new Apple();
-			apple.init();
-			apple.setPos(1, 1);
-			addChildAt(apple, 0);
-			
 			snake = new Snake();
 			snake.init(4, 4, 1);
 			addChildAt(snake, 1);
+			
+			apple = new Apple();
+			apple.init();
+			apple.setCurrentSnake(snake);
+			apple.setRandomPosition();
+			addChildAt(apple, 0);
 			
 			data = SaveLoadData.instance;
 			
@@ -56,7 +58,7 @@ package
 			bestScoreField.font = "flash";
 			bestScoreField.size = 20;
 			bestScoreField.textColor = 0xFFFFFF;
-			bestScoreField.text = "BEST SCORE: " + String(data.loadData("best"));
+			bestScoreField.text = "HIGH SCORE: " + String(data.loadData("best") ? data.loadData("best") : 0);
 			addChild(bestScoreField);
 			
 			scoreField = new SkyTextField();
@@ -68,6 +70,17 @@ package
 			scoreField.size = 20;
 			scoreField.textColor = 0xFFFFFF;
 			addChild(scoreField);
+			
+			plusScoreField = new SkyTextField();
+			plusScoreField.height = 40;
+			plusScoreField.width = 100;
+			plusScoreField.embedFonts = true;
+			plusScoreField.font = "flash";
+			plusScoreField.size = 20;
+			plusScoreField.textColor = 0xFFFFFF;
+			plusScoreField.text = "+100";
+			plusScoreField.visible = false;
+			addChild(plusScoreField);
 			
 			isPressed = false;
 			gameover = false;
@@ -109,11 +122,11 @@ package
 			
 			if (counter >= 10)
 			{
-				if (snake.isAteThemself)
+				if (snake.isAteItself)
 				{
 					if (score > data.loadData("best"))
 					{
-						bestScoreField.text = "BEST SCORE: " + String(score);
+						bestScoreField.text = "HIGH SCORE: " + String(score);
 						data.saveData("best", score);
 					}
 					
@@ -123,21 +136,42 @@ package
 				if (!gameover)
 				{
 					snake.update(deltaTime);
-					counter = 0;
 					isPressed = false;
 					
-					var sp:Point = snake.pos;
-					var ap:Point = apple.getPos();
+					var sp:Point = snake.headPosition;
+					var ap:Point = apple.position;
 					
 					if (sp.x == ap.x && sp.y == ap.y)
 					{
-						apple.setRandomPos(snake);
+						plusScoreField.x = apple.x;
+						plusScoreField.y = apple.y;
+						plusScoreField.scaleX = 1;
+						plusScoreField.scaleY = 1;
+						plusScoreField.visible = true;
+						
+						apple.setRandomPosition();
 						snake.grownUp();
 						score += 100;
 					}
 					
 					scoreField.text = "SCORE: " + String(score);
 				}
+				
+				counter = 0;
+			}
+			
+			if (plusScoreField.scaleX >= 0.4)
+			{
+				plusScoreField.y -= 3;
+				//plusScoreField.x -= width * 0.01;
+				plusScoreField.scaleX -= 0.01;
+				plusScoreField.scaleY -= 0.01;
+			}
+			else
+			{
+				plusScoreField.visible = false;
+				plusScoreField.scaleX = 1;
+				plusScoreField.scaleY = 1;
 			}
 		}
 	}
