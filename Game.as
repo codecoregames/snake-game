@@ -4,9 +4,11 @@ package
 	
 	public class Game extends RenderObject
 	{
+		private var apple:Apple;
+		
 		public function Game()
 		{
-			var apple:Apple = new Apple();
+			apple = new Apple();
 			apple.init();
 			apple.setPosition(4, 5);
 			addChild(apple);
