@@ -10,7 +10,7 @@ package
 	import skysand.render.RenderObject;
 	import skysand.utils.SkyVector2D;
 	
-	public class Game extends RenderObject implements IUpdatable
+	public class Game extends RenderObject
 	{
 		private const CELL_SIZE:uint = 50;
 		private const MAX_SPEED:uint = 50;
@@ -22,13 +22,18 @@ package
 		private var delay:int = 0;
 		private var snakeBody:Vector.<SkyClip>;
 		private var prev:SkyVector2D = new SkyVector2D();
-		private var body:BodyPartData;
+		//private var body:BodyPartData;
 		private var apple:SkyClip;
 		private var nParts:int = 0;
 		
 		public function Game()
 		{
-			initialize();
+			//initialize();
+			
+			var apple:Apple = new Apple();
+			apple.init();
+			apple.setPosition(4, 5);
+			addChild(apple);
 		}
 		
 		private function initialize():void
@@ -52,7 +57,7 @@ package
 			addChild(snakeHead);
 			
 			snakeBody = new Vector.<SkyClip>();
-			body = new BodyPartData();
+			//body = new BodyPartData();
 			
 			for (var i:int = 0; i < 10; i++) 
 			{
@@ -143,7 +148,7 @@ package
 			}
 		}
 		
-		public function update(deltaTime:Number):void
+		public function update():void
 		{
 			delay++;
 			
