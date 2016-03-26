@@ -21,6 +21,26 @@ package
 			
 		}
 		
+		public function destroy():void
+		{
+			removeChild(head);
+			head.destroy();
+			head = null;
+			
+			for (var i:int = 0; i < body.length; i++) 
+			{
+				removeChild(body[i]);
+				body[i].destroy();
+				body[i] = null;
+			}
+			
+			body.length = 0;
+			
+			prev1 = null;
+			prev2 = null;
+			position = null;
+		}
+		
 		/**
 		 * Функция инициализации игры.
 		 */

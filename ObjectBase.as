@@ -33,8 +33,7 @@ package
 		
 		public function destroy():void
 		{
-			if (contains(sprite)) removeChild(sprite);
-			
+			removeChild(sprite);
 			sprite.free();
 			sprite = null;
 			_position = null;

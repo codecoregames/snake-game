@@ -16,12 +16,11 @@ package
 	
 	public class Game extends RenderObject
 	{
-		private var grid:Grid;
 		private var apple:Apple;
 		private var snake:Snake;
 		private var isPressed:Boolean;
 		private var counter:int = 0;
-		private var gameover:Boolean;
+		public var gameover:Boolean;
 		private var scoreField:SkyTextField;
 		private var bestScoreField:SkyTextField;
 		private var score:int;
@@ -30,15 +29,11 @@ package
 		
 		public function Game()
 		{
-			initialize();
+			gameover = true;
 		}
 		
-		private function initialize():void
+		public function initialize():void
 		{
-			grid = new Grid();
-			grid.initialize(800, 800, Config.CELL_SIZE);
-			addChild(grid);
-			
 			snake = new Snake();
 			snake.init(4, 4, 1);
 			addChildAt(snake, 1);
@@ -87,54 +82,74 @@ package
 			score = 0;
 		}
 		
+		public function destroy():void
+		{
+			removeChild(apple);
+			apple.destroy();
+			apple = null;
+			
+			removeChild(snake);
+			snake.destroy();
+			snake = null;
+			
+			removeChild(scoreField);
+			scoreField.free();
+			scoreField = null;
+			
+			removeChild(bestScoreField);
+			bestScoreField.free();
+			bestScoreField = null;
+			
+			removeChild(plusScoreField);
+			plusScoreField.free();
+			plusScoreField = null;
+			
+			data = null;
+		}
+		
 		public function update(deltaTime:Number):void
 		{
-			if (SkyKeyboard.instance.isPressed(SkyKey.M))
+			if (!gameover)
 			{
-				grid.visible = !grid.visible;
-			}
-			
-			if (SkyKeyboard.instance.isPressed(SkyKey.UP) && !isPressed)
-			{
-				snake.moveUp();
-				isPressed = true;
-			}
-			
-			if (SkyKeyboard.instance.isPressed(SkyKey.DOWN) && !isPressed)
-			{
-				snake.moveDown();
-				isPressed = true;
-			}
-			
-			if (SkyKeyboard.instance.isPressed(SkyKey.LEFT) && !isPressed)
-			{
-				snake.moveLeft();
-				isPressed = true;
-			}
-			
-			if (SkyKeyboard.instance.isPressed(SkyKey.RIGHT) && !isPressed)
-			{
-				snake.moveRight();
-				isPressed = true;
-			}
-			
-			counter++;
-			
-			if (counter >= 10)
-			{
-				if (snake.isAteItself)
+				if (SkyKeyboard.instance.isPressed(SkyKey.UP) && !isPressed)
 				{
-					if (score > data.loadData("best"))
-					{
-						bestScoreField.text = "HIGH SCORE: " + String(score);
-						data.saveData("best", score);
-					}
-					
-					gameover = true;
+					snake.moveUp();
+					isPressed = true;
 				}
 				
-				if (!gameover)
+				if (SkyKeyboard.instance.isPressed(SkyKey.DOWN) && !isPressed)
 				{
+					snake.moveDown();
+					isPressed = true;
+				}
+				
+				if (SkyKeyboard.instance.isPressed(SkyKey.LEFT) && !isPressed)
+				{
+					snake.moveLeft();
+					isPressed = true;
+				}
+				
+				if (SkyKeyboard.instance.isPressed(SkyKey.RIGHT) && !isPressed)
+				{
+					snake.moveRight();
+					isPressed = true;
+				}
+				
+				counter++;
+				
+				if (counter >= 10)
+				{
+					if (snake.isAteItself)
+					{
+						if (score > data.loadData("best"))
+						{
+							bestScoreField.text = "HIGH SCORE: " + String(score);
+							data.saveData("best", score);
+						}
+						
+						gameover = true;
+					}
+					
 					snake.update(deltaTime);
 					isPressed = false;
 					
@@ -151,28 +166,29 @@ package
 						
 						apple.setRandomPosition();
 						snake.grownUp();
+						
 						score += 100;
 					}
 					
 					scoreField.text = "SCORE: " + String(score);
+					
+					counter = 0;
 				}
 				
-				counter = 0;
-			}
-			
-			if (plusScoreField.scaleX >= 0.4)
-			{
-				plusScoreField.y -= 3;
-				//plusScoreField.x -= width * 0.01;
-				plusScoreField.scaleX -= 0.01;
-				plusScoreField.scaleY -= 0.01;
-			}
-			else
-			{
-				plusScoreField.visible = false;
-				plusScoreField.scaleX = 1;
-				plusScoreField.scaleY = 1;
-			}
+				if (plusScoreField.scaleX >= 0.4)
+				{
+					plusScoreField.y -= 3;
+					//plusScoreField.x -= width * 0.01;
+					plusScoreField.scaleX -= 0.01;
+					plusScoreField.scaleY -= 0.01;
+				}
+				else
+				{
+					plusScoreField.visible = false;
+					plusScoreField.scaleX = 1;
+					plusScoreField.scaleY = 1;
+				}
+			}	
 		}
 	}
 }

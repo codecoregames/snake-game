@@ -2,12 +2,15 @@ package
 {
 	import flash.display.Sprite;
 	import skysand.animation.SkyAnimationCache;
+	import skysand.components.SkyButton;
 	import skysand.interfaces.IUpdatable;
 	import skysand.render.RenderObject;
 	
 	public class App extends RenderObject implements IUpdatable
 	{
 		private var game:Game;
+		private var button:SkyButton;
+		private var isInit:Boolean = false;
 		
 		public function App() 
 		{
@@ -15,6 +18,20 @@ package
 			
 			game = new Game();
 			addChild(game);
+			
+			button = new SkyButton();
+			button.createSimpleButton(0x2F84D0, 100, 40, play, 1, "play");
+			button.x = Config.WINDOW_SIZE_X * 0.5 - button.width / 2;
+			button.y = Config.WINDOW_SIZE_Y * 0.5 - button.height / 2;
+			addChild(button);
+		}
+		
+		private function play():void
+		{
+			game.initialize();
+			isInit = true;
+			
+			button.visible = false;
 		}
 		
 		private function prepareGraphics():void
@@ -39,6 +56,13 @@ package
 		public function update(deltaTime:Number):void
 		{
 			game.update(deltaTime);
+			
+			if (game.gameover && isInit)
+			{
+				game.destroy();
+				button.visible = true;
+				isInit = false;
+			}
 		}
 	}
 }
