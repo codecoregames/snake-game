@@ -1,6 +1,7 @@
 package 
 {
 	import flash.geom.Point;
+	
 	public class Apple extends ObjectBase
 	{
 		private var snake:Snake;

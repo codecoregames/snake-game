@@ -6,6 +6,9 @@ package
 	public class Snake extends RenderObject
 	{
 		private var body:Vector.<SnakePart>;
+		private var speedX:int;
+		private var speedY:int;
+		
 		
 		public function Snake() 
 		{
@@ -26,6 +29,42 @@ package
 			part.setPosition(1, 1);
 			addChild(part);
 			body.push(part);
+		}
+		
+		public function moveUp():void
+		{
+			if (speedX == 0)
+			{
+				speedY = -1;
+				speedX = 0;
+			}
+		}
+		
+		public function moveDown():void
+		{
+			if (speedX == 0)
+			{
+				speedY = 1;
+				speedX = 0;
+			}
+		}
+		
+		public function moveLeft():void
+		{
+			if (speedY == 0)
+			{
+				speedX = -1;
+				speedY = 0;
+			}
+		}
+		
+		public function moveRight():void
+		{
+			if (speedY == 0)
+			{
+				speedX = 1;
+				speedY = 0;
+			}
 		}
 		
 		public function getBodyPartPosition(index:int):Point
