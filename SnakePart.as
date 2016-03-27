@@ -12,7 +12,7 @@ package
 		{
 			super.init();
 			
-			sprite.setAnimation("bodyPart");
+			sprite.setAnimation("snakePart");
 		}
 	}
 }

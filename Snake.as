@@ -8,7 +8,8 @@ package
 		private var body:Vector.<SnakePart>;
 		private var speedX:int;
 		private var speedY:int;
-		
+		private var position:Point;
+		private var head:SnakePart;
 		
 		public function Snake() 
 		{
@@ -18,8 +19,12 @@ package
 		public function init():void
 		{
 			body = new Vector.<SnakePart>();
+			position = new Point();
 			
-			
+			head = new SnakePart();
+			head.init();
+			head.setPosition(6, 6);
+			addChild(head);
 		}
 		
 		public function grownUp():void
@@ -79,7 +84,8 @@ package
 		
 		public function update():void
 		{
-			
+			position.x += speedX;
+			position.y += speedY;
 		}
 	}
 }
