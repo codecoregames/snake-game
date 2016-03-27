@@ -15,25 +15,26 @@ package
 			var ny:int = Math.ceil(Config.WINDOW_HEIGHT * Math.random() / Config.SELL_SIZE);
 			while (!checkFree(nx, ny))
 			{
-				nx:int = Math.ceil(Config.WINDOW_WIDTH * Math.random() / Config.SELL_SIZE);			
-				ny:int = Math.ceil(Config.WINDOW_HEIGHT * Math.random() / Config.SELL_SIZE);
+				nx = Math.ceil(Config.WINDOW_WIDTH * Math.random() / Config.SELL_SIZE);			
+				ny = Math.ceil(Config.WINDOW_HEIGHT * Math.random() / Config.SELL_SIZE);
 			}
-			setPosition(nx, ny)
+			setPosition(nx, ny);
 		}
 		private function checkFree(x:int, y:int):Boolean
 		{
+			if (snake == null) return true;
 			var length:int = snake.length;
 			if (length <= 0)  return true;	
-			for (var i:int = 0; i < 0; i++) 
+			for (var i:int = 0; i < length; i++) 
 			{
 				var point:Point = snake.getBodyPartPosition(i);
-				if (point.x = x && point.y = y) return false;
+				if (point.x == x && point.y == y) return false;
 				
 			}
+			return true;
 		}
-		{
+		
     
-   }
 		public function setCurrentSnake(snake:Snake):void
 		{
 			this.snake = snake
@@ -44,5 +45,4 @@ package
 			sprite.setAnimation ("apple");
 		}
 	}
-
 }

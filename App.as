@@ -20,7 +20,7 @@ package
 		public function prepareGrafics():void
 		{
 			createShape (0x00FF80, "rectangle", "snakePart");
-			createShape (0xFF8080, "rectangle", "apple");
+			createShape (0xFF8080, "circle", "apple");
 		}
 		public function createShape(color:uint, shape:String, name:String):void
 		{

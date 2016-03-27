@@ -10,7 +10,7 @@ package
 		override public function init():void 
 		{
 			super.init();
-			sprite.setAnimation("body")
+			sprite.setAnimation("snakePart");
 		}
 	}
 
