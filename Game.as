@@ -35,9 +35,10 @@ package
 			snake = new Snake();
 			snake.init();
 			addChild(snake);
-			var apple:Apple = new Apple();
+			apple= new Apple();
 			apple.init();
 			apple.setPosition(4, 5);
+			
 			addChild(apple);
 			
 		}
