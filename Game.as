@@ -2,19 +2,24 @@ package
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
-	import skysand.animation.SkyAnimationCache;
-	import skysand.animation.SkyClip;
-	import skysand.console.Console;
-	import skysand.featherData.SaveLoadData;
+	import skysand.input.SkyKey;
+	import skysand.input.SkyKeyboard;
+	import skysand.input.SkyMouse;
+	import skysand.text.SkyFont;
+	import skysand.ui.SkyButton;
+	import skysand.ui.SkyColor;
+	import skysand.ui.SkyUI;
+	//import skysand.animation.SkyAnimationCache;
+	//import skysand.animation.SkyClip;
+	//import skysand.console.Console;
+	import skysand.display.SkyRenderObjectContainer;
+	//import skysand.featherData.SaveLoadData;
 	import skysand.interfaces.IUpdatable;
-	import skysand.keyboard.SkyKey;
-	import skysand.keyboard.SkyKeyboard;
-	import skysand.render.RenderObject;
 	import skysand.text.SkyTextField;
 	import skysand.utils.SkyMath;
 	import skysand.utils.SkyVector2D;
 	
-	public class Game extends RenderObject
+	public class Game extends SkyRenderObjectContainer implements IUpdatable
 	{
 		private var apple:Apple;
 		private var snake:Snake;
@@ -24,36 +29,43 @@ package
 		private var scoreField:SkyTextField;
 		private var bestScoreField:SkyTextField;
 		private var score:int;
-		private var data:SaveLoadData;
+		private var bestScore:int = 0;
+		//private var data:SaveLoadData;
 		private var plusScoreField:SkyTextField;
+		private var playButton:SkyButton;
 		
 		public function Game()
 		{
-			gameover = true;
+			SkyMouse.instance.calculateClosestObjectOnClick(true);
+			gameover = false;
+			initialize();
 		}
 		
 		public function initialize():void
 		{
 			snake = new Snake();
-			snake.init(4, 4, 1);
-			addChildAt(snake, 1);
+			snake.initialize(4, 4, 1);
+			snake.visible = false;
+			addChild(snake);
 			
 			apple = new Apple();
 			apple.init();
-			apple.setCurrentSnake(snake);
+			apple.setSnake(snake);
 			apple.setRandomPosition();
+			apple.visible = false;
 			addChildAt(apple, 0);
-			
+			/*
 			data = SaveLoadData.instance;
-			
+			*/
 			bestScoreField = new SkyTextField();
 			bestScoreField.height = 40;
 			bestScoreField.width = 300;
 			bestScoreField.embedFonts = true;
-			bestScoreField.font = "flash";
+			bestScoreField.font = SkyFont.I_FLASH;
 			bestScoreField.size = 20;
 			bestScoreField.textColor = 0xFFFFFF;
-			bestScoreField.text = "HIGH SCORE: " + String(data.loadData("best") ? data.loadData("best") : 0);
+			bestScoreField.text = "HIGH SCORE: 0"// + String(data.loadData("best") ? data.loadData("best") : 0);
+			bestScoreField.visible = false;
 			addChild(bestScoreField);
 			
 			scoreField = new SkyTextField();
@@ -61,25 +73,61 @@ package
 			scoreField.width = 300;
 			scoreField.y = 30;
 			scoreField.embedFonts = true;
-			scoreField.font = "flash";
+			scoreField.font = SkyFont.I_FLASH;
 			scoreField.size = 20;
 			scoreField.textColor = 0xFFFFFF;
+			scoreField.visible = false;
 			addChild(scoreField);
 			
 			plusScoreField = new SkyTextField();
 			plusScoreField.height = 40;
 			plusScoreField.width = 100;
 			plusScoreField.embedFonts = true;
-			plusScoreField.font = "flash";
+			plusScoreField.font = SkyFont.I_FLASH;
 			plusScoreField.size = 20;
 			plusScoreField.textColor = 0xFFFFFF;
 			plusScoreField.text = "+100";
 			plusScoreField.visible = false;
 			addChild(plusScoreField);
 			
+			playButton = new SkyButton();
+			playButton.create(SkyUI.RECTANGLE, 100, 40, SkyColor.SAPPHIRE_BLUE, newGame);
+			playButton.addText("Start", SkyFont.I_FLASH, 0xFFFFFF);
+			playButton.x = (Config.WINDOW_WIDTH - playButton.width) / 2;
+			playButton.y = (Config.WINDOW_HEIGHT - playButton.height) / 2;
+			addChild(playButton);
+			
 			isPressed = false;
 			gameover = false;
 			score = 0;
+		}
+		
+		private function newGame():void
+		{
+			playButton.visible = false;
+			plusScoreField.visible = true;
+			scoreField.visible = true;
+			bestScoreField.visible = true;
+			apple.visible = true;
+			snake.visible = true;
+		}
+		
+		private function gameOver():void
+		{
+			playButton.visible = true;
+			plusScoreField.visible = false;
+			scoreField.visible = false;
+			bestScoreField.text = "BEST SCORE: " + String(score < bestScore ? bestScore : score);
+			bestScoreField.visible = false;
+			apple.visible = false;
+			snake.visible = false;
+			
+			score = 0;
+			/*if (score > data.loadData("best"))
+			{
+				//bestScoreField.text = "HIGH SCORE: " + String(score);
+				//data.saveData("best", score);
+			}*/
 		}
 		
 		public function destroy():void
@@ -104,7 +152,7 @@ package
 			plusScoreField.free();
 			plusScoreField = null;
 			
-			data = null;
+			//data = null;
 		}
 		
 		public function update(deltaTime:Number):void
@@ -141,13 +189,7 @@ package
 				{
 					if (snake.isAteItself)
 					{
-						if (score > data.loadData("best"))
-						{
-							bestScoreField.text = "HIGH SCORE: " + String(score);
-							data.saveData("best", score);
-						}
-						
-						gameover = true;
+						gameOver();
 					}
 					
 					snake.update(deltaTime);
@@ -188,7 +230,7 @@ package
 					plusScoreField.scaleX = 1;
 					plusScoreField.scaleY = 1;
 				}
-			}	
+			}
 		}
 	}
 }

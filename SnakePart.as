@@ -4,14 +4,11 @@ package
 	{
 		public function SnakePart() 
 		{
-			super();
-		}
-		
-		override public function init():void 
-		{
-			super.init();
+			var size:int = Config.CELL_SIZE;
 			
-			sprite.setAnimation("body");
+			shape.color = Config.SNAKE_COLOR;
+			shape.drawRect( -size / 2, -size / 2, size, size);
+			addChild(shape);
 		}
 	}
 }

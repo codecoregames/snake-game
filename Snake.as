@@ -2,10 +2,9 @@ package
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
-	import skysand.animation.SkyClip;
-	import skysand.render.RenderObject;
+	import skysand.display.SkyRenderObjectContainer;
 	
-	public class Snake extends RenderObject
+	public class Snake extends SkyRenderObjectContainer
 	{
 		private var speedX:int;
 		private var speedY:int;
@@ -44,7 +43,7 @@ package
 		/**
 		 * Функция инициализации игры.
 		 */
-		public function init(x:int, y:int, speed:int = 1):void
+		public function initialize(x:int, y:int, speed:int = 1):void
 		{
 			this.speed = speed;
 			

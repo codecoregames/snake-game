@@ -11,42 +11,43 @@ package
 			super();
 		}
 		
-		public function setCurrentSnake(snake:Snake):void
+		public function setSnake(snake:Snake):void
 		{
 			this.snake = snake;
-			
-			trace(snake==null);
 		}
 		
 		public function setRandomPosition():void
 		{
 			var nx:int = Math.ceil(Config.NCELLS_X * Math.random());
 			var ny:int = Math.ceil(Config.NCELLS_Y * Math.random());
+			//trace(isCellFree(nx, ny));
+			var isBusy:Boolean = isCellFree(nx, ny);
 			
-			while (!checkFree(nx, ny))
+			while (isBusy)
 			{
 				nx = Math.ceil(Config.NCELLS_X * Math.random());
 				ny = Math.ceil(Config.NCELLS_Y * Math.random());
+				
+				if (isCellFree(nx, ny))
+					isBusy = false;
 			}
 			
 			setPosition(nx, ny);
 		}
 		
-		private function checkFree(nx:int, ny:int):Boolean
+		private function isCellFree(nx:int, ny:int):Boolean
 		{
-			if (snake == null) return false;
-			
 			for (var i:int = 0; i < snake.length; i++) 
 			{
 				var point:Point = snake.getPartPosition(i);
 				
-				if (point.x == nx && point.y == ny)
+				if (point.x != nx && point.y != ny)
 				{
-					return false;
+					return true;
 				}
 			}
 			
-			return true;
+			return false;
 		}
 		
 		override public function destroy():void 
@@ -60,7 +61,11 @@ package
 		{
 			super.init();
 			
-			sprite.setAnimation("apple");
+			var size:Number = Config.CELL_SIZE;
+			
+			shape.color = Config.APPLE_COLOR;
+			shape.drawRect( -size / 2, -size / 2, size, size);
+			addChild(shape);
 		}
 	}
 }
